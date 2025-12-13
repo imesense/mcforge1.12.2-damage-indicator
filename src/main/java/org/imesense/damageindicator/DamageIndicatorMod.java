@@ -1,27 +1,29 @@
 package org.imesense.damageindicator;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.ServerCommandManager;
 
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.DIPermissions;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.DIPotionEffects;
+import org.imesense.damageindicator.DamageIndicatorsMod.server.CommandDI;
+import org.imesense.damageindicator.DamageIndicatorsMod.server.DIProxy;
 
 /**
  * Main class for Damage Indicator modification
@@ -39,12 +41,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @see Mod
  */
 @Mod(
-    modid = DamageIndicator.MOD_ID,
-    name = DamageIndicator.NAME,
-    version = DamageIndicator.VERSION,
-    dependencies = "required-after:fermiumbooter"
+    useMetadata = true,
+    modid = DamageIndicatorMod.MOD_ID,
+    name = DamageIndicatorMod.NAME,
+    version = DamageIndicatorMod.VERSION,
+    dependencies = "required-after:fermiumbooter",
+    acceptableRemoteVersions = "*",
+    acceptedMinecraftVersions = "[1.12.2]"
 )
-public final class DamageIndicator
+public final class DamageIndicatorMod
 {
     /**
      * Modification unique identifier
@@ -61,13 +66,21 @@ public final class DamageIndicator
      */
     public static final String VERSION = "1.12.2-14.23.5.2864";
 
-    /**
-     * Logger instance for {@link DamageIndicator}
-     *
-     * @see Logger
-     * @see LogManager
-     */
-    static Logger logger = LogManager.getLogger(DamageIndicator.class);
+    public static Logger log;
+    @Mod.Instance("damageindicator")
+    public static DamageIndicatorMod instance;
+    @SidedProxy(
+        clientSide = "org.imesense.damageindicator.DamageIndicatorsMod.client.DIClientProxy",
+        serverSide = "org.imesense.damageindicator.DamageIndicatorsMod.server.DIProxy",
+        modId = "damageindicator"
+    )
+    public static DIProxy proxy;
+    int packetID = 0;
+    CommandDI cdi = new CommandDI();
+    public static boolean s_bUpdateMessageSent = false;
+    public static String s_sUpdateMessage = "";
+    public static Set<String> donators = new HashSet();
+    public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel("DIMod");
 
     /**
      * Logs a method call to the logger.
@@ -76,7 +89,7 @@ public final class DamageIndicator
      */
     private void logMethodCall(String methodName)
     {
-        logger.info(
+        log.info(
             "Called {}.{} method",
             this.getClass().getName(),
             methodName
@@ -117,76 +130,29 @@ public final class DamageIndicator
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        logMethodCall(new Object(){}.getClass().getEnclosingMethod().getName());
-
-        if (!event.getSide().isClient())
-        {
-            return;
+        log = event.getModLog();
+        try {
+            DIConfig.loadConfig(event.getSuggestedConfigurationFile());
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            if (!event.getSuggestedConfigurationFile().delete()) {
+                event.getSuggestedConfigurationFile().deleteOnExit();
+            }
+            DIConfig.loadConfig(event.getSuggestedConfigurationFile());
         }
-
-        setLocaleMetadata(event);
-
-        try
-        {
-            String resourcePath = "";
-            List<String> configFiles = new ArrayList<>();
-
-            try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath))
-            {
-                assert inputStream != null;
-
-                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream)))
-                {
-                    String resource;
-                    while ((resource = bufferedReader.readLine()) != null)
-                    {
-                        if (resource.startsWith("mixin.") && resource.endsWith(".json"))
-                        {
-                            configFiles.add(resource);
-                        }
-                    }
-                }
-            }
-
-            if (configFiles.isEmpty())
-            {
-                logger.error("No mixin config files found!");
-                return;
-            }
-
-            logger.info("Found {} mixin config files:", configFiles.size());
-
-            for (String configFile : configFiles)
-            {
-                try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(configFile))
-                {
-                    assert inputStream != null;
-
-                    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream)))
-                    {
-                        logger.info("Loading mixin: {}", configFile);
-
-                        String line;
-                        StringBuilder stringBuilder = new StringBuilder();
-                        while ((line = bufferedReader.readLine()) != null)
-                        {
-                            stringBuilder.append(line).append("\n");
-                        }
-
-                        logger.info("Contents of {}:\n{}", configFile, stringBuilder);
-                        logger.info("Successfully loaded: {}", configFile);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    logger.error("Error loading {}: {}", configFile, exception.getMessage());
-                }
-            }
-        }
-        catch (Exception exception)
-        {
-            logger.error("Common error: {}", exception.getMessage());
-            exception.printStackTrace();
+        try {
+            network.registerMessage(DIPermissions.Handler.class, DIPermissions.class, this.packetID, Side.SERVER);
+            SimpleNetworkWrapper simpleNetworkWrapper = network;
+            int i = this.packetID;
+            this.packetID = i + 1;
+            simpleNetworkWrapper.registerMessage(DIPermissions.Handler.class, DIPermissions.class, i, Side.CLIENT);
+            network.registerMessage(DIPotionEffects.Handler.class, DIPotionEffects.class, this.packetID, Side.SERVER);
+            SimpleNetworkWrapper simpleNetworkWrapper2 = network;
+            int i2 = this.packetID;
+            this.packetID = i2 + 1;
+            simpleNetworkWrapper2.registerMessage(DIPotionEffects.Handler.class, DIPotionEffects.class, i2, Side.CLIENT);
+        } catch (Throwable ex2) {
+            ex2.printStackTrace();
         }
     }
 
@@ -226,6 +192,15 @@ public final class DamageIndicator
         );
     }
 
+    @EventHandler
+    public void load(FMLInitializationEvent event) {
+        proxy.register();
+    }
+
+    @EventHandler
+    public void load(FMLPostInitializationEvent event) {
+    }
+
     /**
      * Handles the load complete event.
      *
@@ -260,6 +235,17 @@ public final class DamageIndicator
                 .getEnclosingMethod()
                 .getName()
         );
+    }
+
+    @EventHandler
+    public void serverStarted(FMLServerStartedEvent evt) {
+        try {
+            ServerCommandManager scm = (ServerCommandManager) FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager();
+            if (!scm.getCommands().containsKey(this.cdi.getName())) {
+                scm.registerCommand(this.cdi);
+            }
+        } catch (Throwable th) {
+        }
     }
 
     /**

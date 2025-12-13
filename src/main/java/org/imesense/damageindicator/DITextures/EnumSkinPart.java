@@ -1,4 +1,4 @@
-package DITextures;
+package org.imesense.damageindicator.DITextures;
 /* loaded from: input.jar:DITextures/EnumSkinPart.class */
 public enum EnumSkinPart {
     FRAMENAME(null, "/DITextures/Default/DIFramSkin.png"),

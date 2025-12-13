@@ -1,6 +1,6 @@
-package DITextures;
+package org.imesense.damageindicator.DITextures;
 
-import DamageIndicatorsMod.DIMod;
+import org.imesense.damageindicator.DamageIndicatorMod;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -50,7 +50,7 @@ public class JarSkinRegistration extends AbstractSkin {
                     Enumeration jEnum = juc.getJarFile().entries();
                     while (jEnum.hasMoreElements()) {
                         try {
-                            checkEntry(jEnum.nextElement());
+                            checkEntry((JarEntry) jEnum.nextElement());
                         } catch (Exception e) {
                         }
                     }
@@ -119,7 +119,7 @@ public class JarSkinRegistration extends AbstractSkin {
         if (ret == null) {
             try {
                 String tmp = (String) getSkinValue(enumName);
-                ret = setupTexture(fixDim(ImageIO.read(DIMod.class.getResourceAsStream(tmp))), enumID);
+                ret = setupTexture(fixDim(ImageIO.read(DamageIndicatorMod.class.getResourceAsStream(tmp))), enumID);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

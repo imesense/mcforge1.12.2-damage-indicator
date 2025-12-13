@@ -1,4 +1,4 @@
-package DamageIndicatorsMod.configuration;
+package org.imesense.damageindicator.DamageIndicatorsMod.configuration;
 
 import java.awt.RenderingHints;
 import java.io.File;

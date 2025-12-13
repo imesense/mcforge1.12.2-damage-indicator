@@ -1,8 +1,7 @@
-package DITextures;
+package org.imesense.damageindicator.DITextures;
 
-import DamageIndicatorsMod.DIMod;
-import DamageIndicatorsMod.configuration.DIConfig;
-import java.awt.Graphics2D;
+import org.imesense.damageindicator.DamageIndicatorMod;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -23,7 +22,7 @@ public abstract class AbstractSkin {
     private static String lastSkinUsed;
     private final EnumMap<EnumSkinPart, Object> skinMap = new EnumMap<>(EnumSkinPart.class);
     public static final List<String> AVAILABLESKINS = new ArrayList();
-    public static final Minecraft MCINSTANCE = Minecraft.func_71410_x();
+    public static final Minecraft MCINSTANCE = Minecraft.getMinecraft();
     public static final Map<String, AbstractSkin> SKINS = new HashMap();
 
     public abstract void loadConfig();
@@ -75,8 +74,8 @@ public abstract class AbstractSkin {
 
     public static void init() {
         AbstractSkin jarSkinRegistration;
-        JarSkinRegistration.scanJarForSkins(DIMod.class);
-        File file = new File(Minecraft.func_71410_x().field_71412_D, "CustomDISkins");
+        JarSkinRegistration.scanJarForSkins(DamageIndicatorMod.class);
+        File file = new File(Minecraft.getMinecraft().gameDir, "CustomDISkins");
         file.mkdirs();
         FileSkinRegistration.scanFilesForSkins(file);
         for (String s : AVAILABLESKINS) {
@@ -116,9 +115,9 @@ public abstract class AbstractSkin {
                 EnumSkinPart esp = (EnumSkinPart) it.next();
                 if (esp.name().endsWith("ID")) {
                     if (((DynamicTexture) lastSkin.skinMap.get(esp)) != null) {
-                        GL11.glDeleteTextures(((DynamicTexture) lastSkin.skinMap.get(esp)).func_110552_b());
+                        GL11.glDeleteTextures(((DynamicTexture) lastSkin.skinMap.get(esp)).getGlTextureId());
                     }
-                    lastSkin.skinMap.put((EnumMap<EnumSkinPart, Object>) esp, (EnumSkinPart) null);
+                    lastSkin.skinMap.put(esp, (EnumSkinPart) null);
                 }
             }
         }
@@ -160,12 +159,12 @@ public abstract class AbstractSkin {
         Iterator it = EnumSet.allOf(EnumSkinPart.class).iterator();
         while (it.hasNext()) {
             EnumSkinPart esp = (EnumSkinPart) it.next();
-            this.skinMap.put((EnumMap<EnumSkinPart, Object>) esp, (EnumSkinPart) esp.getConfigDefault());
+            this.skinMap.put(esp, esp.getConfigDefault());
         }
     }
 
     public final void bindTexture(EnumSkinPart enumSkinPart) {
-        ((DynamicTexture) this.skinMap.get(enumSkinPart)).func_110564_a();
+        ((DynamicTexture) this.skinMap.get(enumSkinPart)).updateDynamicTexture();
     }
 
     public final String getInternalName() {
@@ -197,13 +196,13 @@ public abstract class AbstractSkin {
                     strCat = "Skin config.Info";
                 }
                 if (defaultVal instanceof Integer) {
-                    this.skinMap.put((EnumMap<EnumSkinPart, Object>) enumSkinPart, (EnumSkinPart) Integer.valueOf(config.get(strCat, strKey, ((Integer) defaultVal).intValue()).getInt(((Integer) defaultVal).intValue())));
+                    this.skinMap.put(enumSkinPart, Integer.valueOf(config.get(strCat, strKey, ((Integer) defaultVal).intValue()).getInt(((Integer) defaultVal).intValue())));
                 } else {
-                    this.skinMap.put((EnumMap<EnumSkinPart, Object>) enumSkinPart, (EnumSkinPart) config.get(strCat, strKey, (String) defaultVal).getString());
+                    this.skinMap.put( enumSkinPart, config.get(strCat, strKey, (String) defaultVal).getString());
                 }
             }
         }
-        this.skinMap.put((EnumMap<EnumSkinPart, Object>) EnumSkinPart.ORDERING, (EnumSkinPart) populateOrdering(config));
+        this.skinMap.put(EnumSkinPart.ORDERING, populateOrdering(config));
         config.save();
     }
 
@@ -222,20 +221,20 @@ public abstract class AbstractSkin {
     }
 
     public final void setInternalName(String newInternalName) {
-        this.skinMap.put((EnumMap<EnumSkinPart, Object>) EnumSkinPart.INTERNAL, (EnumSkinPart) newInternalName);
+        this.skinMap.put(EnumSkinPart.INTERNAL, newInternalName);
     }
 
     public final void setSkinValue(EnumSkinPart enumSkinPart, Object value) {
-        this.skinMap.put((EnumMap<EnumSkinPart, Object>) enumSkinPart, (EnumSkinPart) value);
+        this.skinMap.put(enumSkinPart, value);
     }
 
     public final DynamicTexture setupTexture(BufferedImage bufImg, EnumSkinPart uniqueName) {
         DynamicTexture check = (DynamicTexture) this.skinMap.get(uniqueName);
         if (check == null) {
             check = new DynamicTexture(bufImg);
-            this.skinMap.put((EnumMap<EnumSkinPart, Object>) uniqueName, (EnumSkinPart) check);
+            this.skinMap.put(uniqueName, check);
         } else {
-            bufImg.getRGB(0, 0, bufImg.getWidth(), bufImg.getHeight(), check.func_110565_c(), 0, bufImg.getWidth());
+            bufImg.getRGB(0, 0, bufImg.getWidth(), bufImg.getHeight(), check.getTextureData(), 0, bufImg.getWidth());
         }
         return check;
     }

@@ -1,4 +1,4 @@
-package DamageIndicatorsMod.core;
+package org.imesense.damageindicator.DamageIndicatorsMod.core;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -1,4 +1,4 @@
-package DamageIndicatorsMod.gui;
+package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
 import java.awt.Color;
 import net.minecraft.client.Minecraft;
@@ -26,7 +26,7 @@ public class GuiToolTip extends Gui {
     public boolean useTexture = false;
     public int xPos = 0;
     public int yPos = 0;
-    FontRenderer cfr = Minecraft.func_71410_x().field_71466_p;
+    FontRenderer cfr = Minecraft.getMinecraft().fontRenderer;
 
     public GuiToolTip(AdvancedGui parentGui, int width, int height) {
         this.HEIGHT = 128;
@@ -37,11 +37,11 @@ public class GuiToolTip extends Gui {
     }
 
     public void drawCenteredStringNoShadow(FontRenderer par1FontRenderer, String par2Str, int par3, int par4, int par5) {
-        this.cfr.func_78264_a(true);
+        this.cfr.setUnicodeFlag(true);
         if (((par5 >> 24) & 255) > 16) {
-            this.cfr.func_175065_a(par2Str, MathHelper.func_76141_d(par3 - ((par1FontRenderer.func_78256_a(par2Str) / 2.0f) * 0.75f)) - 8, par4, par5, false);
+            this.cfr.drawString(par2Str, MathHelper.floor(par3 - ((par1FontRenderer.getStringWidth(par2Str) / 2.0f) * 0.75f)) - 8, par4, par5, false);
         }
-        this.cfr.func_78264_a(false);
+        this.cfr.setUnicodeFlag(false);
     }
 
     public void drawStrings(FontRenderer par1FontRenderer) {
@@ -63,26 +63,26 @@ public class GuiToolTip extends Gui {
         if (this.useTexture) {
             int lineNumber = 0 + ((this.iconIndex % 8) * 18);
             int arr$ = 198 + ((this.iconIndex / 8) * 18);
-            this.PARENT.func_73729_b(x, y, lineNumber, arr$, this.WIDTH, this.HEIGHT);
+            this.PARENT.drawTexturedModalRect(x, y, lineNumber, arr$, this.WIDTH, this.HEIGHT);
         } else {
-            this.PARENT.func_73733_a(x, y, x + this.WIDTH, y + this.HEIGHT, gradStart, gradEnd);
-            func_73734_a(x, y, x + this.WIDTH, y + this.borderWidth, border);
-            func_73734_a(x, (y + this.HEIGHT) - this.borderWidth, x + this.WIDTH, y + this.HEIGHT, border);
-            func_73734_a(x, y, x + this.borderWidth, y + this.HEIGHT, border);
-            func_73734_a((x + this.WIDTH) - this.borderWidth, y, x + this.WIDTH, y + this.HEIGHT, border);
+            this.PARENT.drawGradientRect(x, y, x + this.WIDTH, y + this.HEIGHT, gradStart, gradEnd);
+            drawRect(x, y, x + this.WIDTH, y + this.borderWidth, border);
+            drawRect(x, (y + this.HEIGHT) - this.borderWidth, x + this.WIDTH, y + this.HEIGHT, border);
+            drawRect(x, y, x + this.borderWidth, y + this.HEIGHT, border);
+            drawRect((x + this.WIDTH) - this.borderWidth, y, x + this.WIDTH, y + this.HEIGHT, border);
         }
         int lineNumber2 = 0;
         for (String string : lines) {
             int linecount = lines.length;
-            int verticalOffset = MathHelper.func_76141_d((this.HEIGHT / 2.0f) - (((linecount * (par1FontRenderer.field_78288_b + 2.0f)) * 1.0f) / 2.0f));
+            int verticalOffset = MathHelper.floor((this.HEIGHT / 2.0f) - (((linecount * (par1FontRenderer.FONT_HEIGHT + 2.0f)) * 1.0f) / 2.0f));
             if (centered) {
                 if (this.centerVertically) {
-                    drawCenteredStringNoShadow(par1FontRenderer, string, x + (this.WIDTH / 2), y + verticalOffset + (lineNumber2 * (par1FontRenderer.field_78288_b + 2)), font);
+                    drawCenteredStringNoShadow(par1FontRenderer, string, x + (this.WIDTH / 2), y + verticalOffset + (lineNumber2 * (par1FontRenderer.FONT_HEIGHT + 2)), font);
                 } else {
                     drawCenteredStringNoShadow(par1FontRenderer, string, x + (this.WIDTH / 2), y + 3 + (lineNumber2 * this.lineSpacing), font);
                 }
             } else {
-                par1FontRenderer.func_78276_b(string, x + 3, y + 3 + (lineNumber2 * this.lineSpacing), font);
+                par1FontRenderer.drawString(string, x + 3, y + 3 + (lineNumber2 * this.lineSpacing), font);
             }
             lineNumber2++;
         }
@@ -117,27 +117,27 @@ public class GuiToolTip extends Gui {
             GL11.glColor4f(arr$[0], arr$[1], arr$[2], arr$[3]);
             int len$ = 0 + ((this.iconIndex % 8) * 18);
             int i$ = 198 + ((this.iconIndex / 8) * 18);
-            this.PARENT.func_73729_b(x, y, len$, i$, this.WIDTH, this.HEIGHT);
+            this.PARENT.drawTexturedModalRect(x, y, len$, i$, this.WIDTH, this.HEIGHT);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         } else {
-            this.PARENT.func_73733_a(x, y, this.WIDTH, this.HEIGHT, gradStart, gradEnd);
-            func_73734_a(x, y, x + this.WIDTH, y + this.borderWidth, border);
-            func_73734_a(x, (y + this.HEIGHT) - this.borderWidth, x + this.WIDTH, y + this.HEIGHT, border);
-            func_73734_a(x, y, x + this.borderWidth, y + this.HEIGHT, border);
-            func_73734_a((x + this.WIDTH) - this.borderWidth, y, x + this.WIDTH, y + this.HEIGHT, border);
+            this.PARENT.drawGradientRect(x, y, this.WIDTH, this.HEIGHT, gradStart, gradEnd);
+            drawRect(x, y, x + this.WIDTH, y + this.borderWidth, border);
+            drawRect(x, (y + this.HEIGHT) - this.borderWidth, x + this.WIDTH, y + this.HEIGHT, border);
+            drawRect(x, y, x + this.borderWidth, y + this.HEIGHT, border);
+            drawRect((x + this.WIDTH) - this.borderWidth, y, x + this.WIDTH, y + this.HEIGHT, border);
         }
         int var18 = 0;
         for (String string : lines) {
             int linecount = lines.length;
-            int verticalSpacing = MathHelper.func_76141_d(this.HEIGHT / (linecount + 1));
+            int verticalSpacing = MathHelper.floor(this.HEIGHT / (linecount + 1));
             if (centered) {
                 if (this.centerVertically) {
-                    func_73732_a(par1FontRenderer, string, x + (this.WIDTH / 2), (y + (verticalSpacing * var18)) - (par1FontRenderer.field_78288_b / 2), colors[var18]);
+                    drawCenteredString(par1FontRenderer, string, x + (this.WIDTH / 2), (y + (verticalSpacing * var18)) - (par1FontRenderer.FONT_HEIGHT / 2), colors[var18]);
                 } else {
-                    func_73732_a(par1FontRenderer, string, x + (this.WIDTH / 2), y + 3 + (var18 * this.lineSpacing), colors[var18]);
+                    drawCenteredString(par1FontRenderer, string, x + (this.WIDTH / 2), y + 3 + (var18 * this.lineSpacing), colors[var18]);
                 }
             } else {
-                func_73731_b(par1FontRenderer, string, x + 3, y + 3 + (var18 * this.lineSpacing), colors[var18]);
+                drawString(par1FontRenderer, string, x + 3, y + 3 + (var18 * this.lineSpacing), colors[var18]);
             }
             var18++;
         }

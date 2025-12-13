@@ -1,7 +1,7 @@
-package DamageIndicatorsMod.core;
+package org.imesense.damageindicator.DamageIndicatorsMod.core;
 
-import DamageIndicatorsMod.DIMod;
-import DamageIndicatorsMod.configuration.DIConfig;
+import org.imesense.damageindicator.DamageIndicatorMod;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -27,7 +27,7 @@ public class Tools {
     private static Tools instance;
 
     /* renamed from: mc */
-    private Minecraft f1mc = Minecraft.func_71410_x();
+    private Minecraft f1mc = Minecraft.getMinecraft();
     public List<Object[]> unloadedEntities = new ArrayList();
     boolean lasttimefailed = false;
 
@@ -42,7 +42,7 @@ public class Tools {
     }
 
     public BufferedImage doFilter(BufferedImage src) throws OutOfMemoryError, Throwable {
-        int upScaleDim = MathHelper.func_76141_d(src.getWidth() * DIConfig.mainInstance().ScaleFilter);
+        int upScaleDim = MathHelper.floor(src.getWidth() * DIConfig.mainInstance().ScaleFilter);
         BufferedImage dst = new BufferedImage(upScaleDim, upScaleDim, src.getType());
         AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(DIConfig.mainInstance().ScaleFilter, DIConfig.mainInstance().ScaleFilter), DIConfig.mainInstance().hints);
         ato.filter(src, dst);
@@ -57,12 +57,11 @@ public class Tools {
     }
 
     public void giveUpdateInformation() {
-        if (DIMod.s_sUpdateMessage == null) {
-            DIMod.s_sUpdateMessage = "Damage Indicators was unable to check for updates.";
+        if (DamageIndicatorMod.s_sUpdateMessage == null) {
+            DamageIndicatorMod.s_sUpdateMessage = "Damage Indicators was unable to check for updates.";
         }
-        if (!"".equals(DIMod.s_sUpdateMessage) && this.f1mc.field_71439_g != null) {
-            this.f1mc.field_71439_g.func_145747_a(new TextComponentString(DIMod.s_sUpdateMessage));
-            DIMod.s_sUpdateMessage = "";
+        if (!"".equals(DamageIndicatorMod.s_sUpdateMessage) && this.f1mc.player != null) {
+            DamageIndicatorMod.s_sUpdateMessage = "";
         }
     }
 
@@ -76,8 +75,8 @@ public class Tools {
 
     public static Map<Class<? extends Entity>, String> getEntityList() {
         Map<Class<? extends Entity>, String> ret = new HashMap<>();
-        for (ResourceLocation rl : EntityList.func_180124_b()) {
-            ret.put(EntityList.getClass(rl), EntityList.func_191302_a(rl));
+        for (ResourceLocation rl : EntityList.getEntityNameList()) {
+            ret.put(EntityList.getClass(rl), EntityList.getTranslationName(rl));
         }
         ret.put(EntityOtherPlayerMP.class, "OtherPlayers");
         return ret;

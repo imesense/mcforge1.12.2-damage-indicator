@@ -1,7 +1,7 @@
-package DamageIndicatorsMod.gui;
+package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
-import DITextures.AbstractSkin;
-import DamageIndicatorsMod.configuration.DIConfig;
+import org.imesense.damageindicator.DITextures.AbstractSkin;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -47,7 +47,7 @@ public class SkinSlot {
     }
 
     public SkinSlot(SkinGui par1GuiTexturePacks) {
-        this(Minecraft.func_71410_x(), par1GuiTexturePacks.field_146294_l - 128, par1GuiTexturePacks.field_146295_m - 128, 64, par1GuiTexturePacks.field_146295_m - 64, 64, 32);
+        this(Minecraft.getMinecraft(), par1GuiTexturePacks.width - 128, par1GuiTexturePacks.height - 128, 64, par1GuiTexturePacks.height - 64, 64, 32);
         this.parentTexturePackGui = par1GuiTexturePacks;
         this.selectedEntry = 0;
         if (DIConfig.mainInstance().portraitEnabled) {
@@ -59,7 +59,7 @@ public class SkinSlot {
         DIConfig.mainInstance().selectedSkin = AbstractSkin.AVAILABLESKINS.get(par1);
         AbstractSkin.setSkin(DIConfig.mainInstance().selectedSkin);
         if (par2) {
-            Minecraft.func_71410_x().func_147108_a(this.parentTexturePackGui);
+            Minecraft.getMinecraft().displayGuiScreen(this.parentTexturePackGui);
         }
         this.selectedEntry = par1;
     }
@@ -72,9 +72,9 @@ public class SkinSlot {
         String text1 = AbstractSkin.getSkinName(AbstractSkin.AVAILABLESKINS.get(par1));
         String text2 = AbstractSkin.getAuthor(AbstractSkin.AVAILABLESKINS.get(par1));
         int var10003 = this.left + 4;
-        this.parentTexturePackGui.func_73731_b(Minecraft.func_71410_x().field_71466_p, text1, var10003, par3 + 3, 3398963);
+        this.parentTexturePackGui.drawString(Minecraft.getMinecraft().fontRenderer, text1, var10003, par3 + 3, 3398963);
         int var100032 = this.left + 4;
-        this.parentTexturePackGui.func_73731_b(Minecraft.func_71410_x().field_71466_p, text2, var100032, par3 + 15, 3398963);
+        this.parentTexturePackGui.drawString(Minecraft.getMinecraft().fontRenderer, text2, var100032, par3 + 15, 3398963);
     }
 
     public SkinSlot(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight) {
@@ -93,10 +93,10 @@ public class SkinSlot {
         this.right = width + this.left;
         this.f3mc = client;
         ScaledResolution scaledresolution = new ScaledResolution(this.f3mc);
-        this.boxLocX = MathHelper.func_76141_d(left * scaledresolution.func_78325_e());
-        this.boxWidth = MathHelper.func_76141_d(width * scaledresolution.func_78325_e());
-        this.boxHeight = MathHelper.func_76141_d(height * scaledresolution.func_78325_e());
-        this.boxLocY = MathHelper.func_76141_d(top * scaledresolution.func_78325_e());
+        this.boxLocX = MathHelper.floor(left * scaledresolution.getScaleFactor());
+        this.boxWidth = MathHelper.floor(width * scaledresolution.getScaleFactor());
+        this.boxHeight = MathHelper.floor(height * scaledresolution.getScaleFactor());
+        this.boxLocY = MathHelper.floor(top * scaledresolution.getScaleFactor());
         this.selectedEntry = AbstractSkin.AVAILABLESKINS.indexOf(DIConfig.mainInstance().selectedSkin);
     }
 
@@ -155,12 +155,12 @@ public class SkinSlot {
     }
 
     public void actionPerformed(GuiButton button) {
-        if (button.field_146124_l) {
-            if (button.field_146127_k == this.scrollUpActionId) {
+        if (button.enabled) {
+            if (button.id == this.scrollUpActionId) {
                 this.scrollDistance -= (this.slotHeight * 2) / 3;
                 this.initialMouseClickY = -2.0f;
                 applyScrollLimits();
-            } else if (button.field_146127_k == this.scrollDownActionId) {
+            } else if (button.id == this.scrollDownActionId) {
                 this.scrollDistance += (this.slotHeight * 2) / 3;
                 this.initialMouseClickY = -2.0f;
                 applyScrollLimits();

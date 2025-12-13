@@ -1,9 +1,9 @@
-package DamageIndicatorsMod.gui;
+package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
-import DITextures.AbstractSkin;
-import DITextures.EnumSkinPart;
-import DITextures.JarSkinRegistration;
-import DamageIndicatorsMod.configuration.DIConfig;
+import org.imesense.damageindicator.DITextures.AbstractSkin;
+import org.imesense.damageindicator.DITextures.EnumSkinPart;
+import org.imesense.damageindicator.DITextures.JarSkinRegistration;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import net.minecraft.client.Minecraft;
@@ -27,9 +27,9 @@ public class RepositionGui extends GuiScreen {
     private boolean setDamageColor = false;
     private boolean setHealColor = false;
 
-    protected void func_146284_a(GuiButton par1GuiButton) throws IOException {
+    protected void actionPerformed(GuiButton par1GuiButton) throws IOException {
         if (par1GuiButton instanceof GuiCheckBox) {
-            switch (par1GuiButton.field_146127_k) {
+            switch (par1GuiButton.id) {
                 case 0:
                     ((GuiCheckBox) par1GuiButton).setChecked(!((GuiCheckBox) par1GuiButton).isChecked());
                     this.diConfig.portraitEnabled = ((GuiCheckBox) par1GuiButton).checked;
@@ -52,22 +52,22 @@ public class RepositionGui extends GuiScreen {
                     break;
             }
         } else {
-            switch (par1GuiButton.field_146127_k) {
+            switch (par1GuiButton.id) {
                 case 3:
-                    this.field_146297_k.func_147108_a(new SkinGui(null, this.field_146297_k.field_71474_y));
+                    this.mc.displayGuiScreen(new SkinGui(null, this.mc.gameSettings));
                     break;
                 case 4:
-                    this.field_146297_k.func_147108_a(new AdvancedGui());
+                    this.mc.displayGuiScreen(new AdvancedGui());
                     break;
                 case 5:
-                    this.field_146297_k.field_71439_g.func_71053_j();
+                    this.mc.player.closeScreen();
                     break;
             }
         }
-        super.func_146284_a(par1GuiButton);
+        super.actionPerformed(par1GuiButton);
     }
 
-    public boolean func_73868_f() {
+    public boolean doesGuiPauseGame() {
         return true;
     }
 
@@ -109,29 +109,29 @@ public class RepositionGui extends GuiScreen {
     }
 
     private void drawColorSelector() {
-        func_73734_a(-2, -2, 72, 66, -2236963);
+        drawRect(-2, -2, 72, 66, -2236963);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        this.gradientTex.func_110564_a();
+        this.gradientTex.updateDynamicTexture();
         GL11.glBegin(7);
         GL11.glTexCoord2d(0.0d, 0.0d);
-        GL11.glVertex3d(0.0d, 0.0d, this.field_73735_i);
+        GL11.glVertex3d(0.0d, 0.0d, this.zLevel);
         GL11.glTexCoord2d(0.0d, 1.0d);
-        GL11.glVertex3d(0.0d, 64.0d, this.field_73735_i);
+        GL11.glVertex3d(0.0d, 64.0d, this.zLevel);
         GL11.glTexCoord2d(1.0d, 1.0d);
-        GL11.glVertex3d(64.0d, 64.0d, this.field_73735_i);
+        GL11.glVertex3d(64.0d, 64.0d, this.zLevel);
         GL11.glTexCoord2d(1.0d, 0.0d);
-        GL11.glVertex3d(64.0d, 0.0d, this.field_73735_i);
+        GL11.glVertex3d(64.0d, 0.0d, this.zLevel);
         GL11.glEnd();
-        this.colorBarTex.func_110564_a();
+        this.colorBarTex.updateDynamicTexture();
         GL11.glBegin(7);
         GL11.glTexCoord2d(0.0d, 0.0d);
-        GL11.glVertex3d(66.0d, 0.0d, this.field_73735_i);
+        GL11.glVertex3d(66.0d, 0.0d, this.zLevel);
         GL11.glTexCoord2d(0.0d, 1.0d);
-        GL11.glVertex3d(66.0d, 64.0d, this.field_73735_i);
+        GL11.glVertex3d(66.0d, 64.0d, this.zLevel);
         GL11.glTexCoord2d(1.0d, 1.0d);
-        GL11.glVertex3d(70.0d, 64.0d, this.field_73735_i);
+        GL11.glVertex3d(70.0d, 64.0d, this.zLevel);
         GL11.glTexCoord2d(1.0d, 0.0d);
-        GL11.glVertex3d(70.0d, 0.0d, this.field_73735_i);
+        GL11.glVertex3d(70.0d, 0.0d, this.zLevel);
         GL11.glEnd();
     }
 
@@ -158,15 +158,15 @@ public class RepositionGui extends GuiScreen {
         this.gradientTex = new DynamicTexture(this.Gradient);
     }
 
-    public void func_73863_a(int par1, int par2, float par3) {
-        func_146276_q_();
+    public void drawScreen(int par1, int par2, float par3) {
+        drawDefaultBackground();
         GL11.glPushMatrix();
-        ((GuiCheckBox) this.field_146292_n.get(6)).checked = this.diConfig.alternateRenderingMethod;
-        ((GuiCheckBox) this.field_146292_n.get(7)).checked = this.diConfig.highCompatibilityMod;
+        ((GuiCheckBox) this.buttonList.get(6)).checked = this.diConfig.alternateRenderingMethod;
+        ((GuiCheckBox) this.buttonList.get(7)).checked = this.diConfig.highCompatibilityMod;
         if (!this.diConfig.portraitEnabled) {
-            ((GuiCheckBox) this.field_146292_n.get(1)).field_146124_l = false;
+            ((GuiCheckBox) this.buttonList.get(1)).enabled = false;
         } else {
-            ((GuiCheckBox) this.field_146292_n.get(1)).field_146124_l = true;
+            ((GuiCheckBox) this.buttonList.get(1)).enabled = true;
             GL11.glPushMatrix();
             GL11.glColor3f(1.0f, 1.0f, 1.0f);
             GL11.glTranslatef((1.0f - DIConfig.mainInstance().guiScale) * DIConfig.mainInstance().locX, (1.0f - DIConfig.mainInstance().guiScale) * DIConfig.mainInstance().locY, 0.0f);
@@ -178,23 +178,23 @@ public class RepositionGui extends GuiScreen {
             float headPosY2 = headPosY + ((((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGMOBPREVIEWY)).intValue() + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGBACKGROUNDHEIGHT)).intValue() / 2.0f)) * DIConfig.mainInstance().guiScale);
             float headPosX3 = par1 - headPosX2;
             float headPosY3 = par2 - headPosY2;
-            float f2 = this.field_146297_k.field_71439_g.field_70761_aq;
-            float f3 = this.field_146297_k.field_71439_g.field_70177_z;
-            float f4 = this.field_146297_k.field_71439_g.field_70125_A;
-            float f5 = this.field_146297_k.field_71439_g.field_70758_at;
-            float f6 = this.field_146297_k.field_71439_g.field_70759_as;
-            this.field_146297_k.field_71439_g.field_70761_aq = (((float) Math.atan(headPosX3 / 40.0f)) * 20.0f) + 35.0f;
-            this.field_146297_k.field_71439_g.field_70177_z = ((float) Math.atan(headPosX3 / 40.0f)) * 40.0f;
-            this.field_146297_k.field_71439_g.field_70125_A = ((float) Math.atan(headPosY3 / 40.0f)) * 20.0f;
-            this.field_146297_k.field_71439_g.field_70759_as = this.field_146297_k.field_71439_g.field_70177_z;
-            this.field_146297_k.field_71439_g.field_70758_at = this.field_146297_k.field_71439_g.field_70177_z;
-            Minecraft.func_71410_x().func_175598_ae().field_78735_i = 180.0f;
-            DIGuiTools.DrawPortraitSkinned(this.diConfig.locX, this.diConfig.locY, this.field_146297_k.field_71439_g.func_70005_c_(), (int) Math.ceil(this.field_146297_k.field_71439_g.func_110138_aP()), (int) Math.ceil(this.field_146297_k.field_71439_g.func_110143_aJ()), this.field_146297_k.field_71439_g);
-            this.field_146297_k.field_71439_g.field_70761_aq = f2;
-            this.field_146297_k.field_71439_g.field_70177_z = f3;
-            this.field_146297_k.field_71439_g.field_70125_A = f4;
-            this.field_146297_k.field_71439_g.field_70758_at = f5;
-            this.field_146297_k.field_71439_g.field_70759_as = f6;
+            float f2 = this.mc.player.renderYawOffset;
+            float f3 = this.mc.player.rotationYaw;
+            float f4 = this.mc.player.rotationPitch;
+            float f5 = this.mc.player.prevRotationYawHead;
+            float f6 = this.mc.player.rotationYawHead;
+            this.mc.player.renderYawOffset = (((float) Math.atan(headPosX3 / 40.0f)) * 20.0f) + 35.0f;
+            this.mc.player.rotationYaw = ((float) Math.atan(headPosX3 / 40.0f)) * 40.0f;
+            this.mc.player.rotationPitch = ((float) Math.atan(headPosY3 / 40.0f)) * 20.0f;
+            this.mc.player.rotationYawHead = this.mc.player.rotationYaw;
+            this.mc.player.prevRotationYawHead = this.mc.player.rotationYaw;
+            Minecraft.getMinecraft().getRenderManager().playerViewY = 180.0f;
+            DIGuiTools.DrawPortraitSkinned(this.diConfig.locX, this.diConfig.locY, this.mc.player.getName(), (int) Math.ceil(this.mc.player.getMaxHealth()), (int) Math.ceil(this.mc.player.getHealth()), this.mc.player);
+            this.mc.player.renderYawOffset = f2;
+            this.mc.player.rotationYaw = f3;
+            this.mc.player.rotationPitch = f4;
+            this.mc.player.prevRotationYawHead = f5;
+            this.mc.player.rotationYawHead = f6;
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }
@@ -202,31 +202,31 @@ public class RepositionGui extends GuiScreen {
             this.animationTick = -5.0f;
         }
         this.animationTick += 0.01f;
-        GL11.glTranslatef(((this.field_146294_l / 2) + 30) - (this.textWidth / 2), (this.field_146295_m / 2) - 30, 0.0f);
-        func_73734_a(0, 0, 30, 20, 1996488704);
-        func_73734_a(0, 2, 30, 0, -1441726384);
-        func_73734_a(0, 22, 30, 20, -1441726384);
-        func_73734_a(0, 0, 2, 22, -1441726384);
-        func_73734_a(28, 0, 30, 22, -1441726384);
+        GL11.glTranslatef(((this.width / 2) + 30) - (this.textWidth / 2), (this.height / 2) - 30, 0.0f);
+        drawRect(0, 0, 30, 20, 1996488704);
+        drawRect(0, 2, 30, 0, -1441726384);
+        drawRect(0, 22, 30, 20, -1441726384);
+        drawRect(0, 0, 2, 22, -1441726384);
+        drawRect(28, 0, 30, 22, -1441726384);
         GL11.glTranslatef(32.0f, 25.0f, 0.0f);
-        func_73734_a(0, 0, 15, 13, (-16777216) | this.diConfig.DIColor);
+        drawRect(0, 0, 15, 13, (-16777216) | this.diConfig.DIColor);
         if (this.setDamageColor) {
-            func_73734_a(0, 2, 15, 0, -2236963);
-            func_73734_a(0, 15, 15, 13, -2236963);
-            func_73734_a(0, 0, 2, 15, -2236963);
-            func_73734_a(13, 0, 15, 15, -2236963);
+            drawRect(0, 2, 15, 0, -2236963);
+            drawRect(0, 15, 15, 13, -2236963);
+            drawRect(0, 0, 2, 15, -2236963);
+            drawRect(13, 0, 15, 15, -2236963);
             GL11.glTranslatef(17.0f, -31.0f, 0.0f);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             drawColorSelector();
             GL11.glTranslatef(-17.0f, 31.0f, 0.0f);
         }
         GL11.glTranslatef(0.0f, 20.0f, 0.0f);
-        func_73734_a(0, 0, 15, 15, (-16777216) | this.diConfig.healColor);
+        drawRect(0, 0, 15, 15, (-16777216) | this.diConfig.healColor);
         if (this.setHealColor) {
-            func_73734_a(0, 2, 15, 0, -2236963);
-            func_73734_a(0, 15, 15, 13, -2236963);
-            func_73734_a(0, 0, 2, 15, -2236963);
-            func_73734_a(13, 0, 15, 15, -2236963);
+            drawRect(0, 2, 15, 0, -2236963);
+            drawRect(0, 15, 15, 13, -2236963);
+            drawRect(0, 0, 2, 15, -2236963);
+            drawRect(13, 0, 15, 15, -2236963);
             GL11.glTranslatef(17.0f, -51.0f, 0.0f);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             drawColorSelector();
@@ -238,7 +238,7 @@ public class RepositionGui extends GuiScreen {
         if (par1 > this.diConfig.locX && par1 < this.diConfig.locX + ((Integer) JarSkinRegistration.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGFRAMEWIDTH)).intValue() && par2 > this.diConfig.locY && par2 < this.diConfig.locY + ((Integer) JarSkinRegistration.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGFRAMEHEIGHT)).intValue()) {
             mouseOver = true;
         }
-        if (par1 > ((GuiCheckBox) this.field_146292_n.get(7)).field_146128_h - 20 && par2 > ((GuiCheckBox) this.field_146292_n.get(7)).field_146129_i - 20 && par1 <= ((GuiCheckBox) this.field_146292_n.get(7)).getWidth()) {
+        if (par1 > ((GuiCheckBox) this.buttonList.get(7)).x - 20 && par2 > ((GuiCheckBox) this.buttonList.get(7)).y - 20 && par1 <= ((GuiCheckBox) this.buttonList.get(7)).getWidth()) {
             mouseOver2 = true;
         }
         if (this.mouseDown) {
@@ -246,137 +246,137 @@ public class RepositionGui extends GuiScreen {
             this.diConfig.locX = par1;
             this.diConfig.locY = par2;
         }
-        this.field_146289_q.func_175063_a("Gui Scale:", (this.field_146294_l / 2) - (((this.textWidth + this.gtf.func_146200_o()) + 8) / 2), (this.field_146295_m / 2) - 24, 16777215);
-        this.field_146289_q.func_175063_a("Damage Color:", (this.field_146294_l / 2) - (this.field_146289_q.func_78256_a("Damage Color:") / 2), (this.field_146295_m / 2) - 2, 16777215);
-        this.field_146289_q.func_175063_a("Heal Color:", (this.field_146294_l / 2) - (this.field_146289_q.func_78256_a("Heal Color:") / 2), (this.field_146295_m / 2) + 18, 16777215);
-        this.gtf.func_146194_f();
-        this.field_146289_q.func_175063_a("%", ((((this.field_146294_l / 2) + 42) - (this.textWidth / 2)) - 6) + this.gtf.func_146200_o(), (this.field_146295_m / 2) - 24, 16777215);
-        ((GuiCheckBox) this.field_146292_n.get(0)).setChecked(this.diConfig.portraitEnabled);
-        ((GuiCheckBox) this.field_146292_n.get(1)).setChecked(this.diConfig.enablePotionEffects);
-        ((GuiCheckBox) this.field_146292_n.get(2)).setChecked(this.diConfig.popOffsEnabled);
-        super.func_73863_a(par1, par2, par3);
+        this.fontRenderer.drawStringWithShadow("Gui Scale:", (this.width / 2) - (((this.textWidth + this.gtf.getWidth()) + 8) / 2), (this.height / 2) - 24, 16777215);
+        this.fontRenderer.drawStringWithShadow("Damage Color:", (this.width / 2) - (this.fontRenderer.getStringWidth("Damage Color:") / 2), (this.height / 2) - 2, 16777215);
+        this.fontRenderer.drawStringWithShadow("Heal Color:", (this.width / 2) - (this.fontRenderer.getStringWidth("Heal Color:") / 2), (this.height / 2) + 18, 16777215);
+        this.gtf.drawTextBox();
+        this.fontRenderer.drawStringWithShadow("%", ((((this.width / 2) + 42) - (this.textWidth / 2)) - 6) + this.gtf.getWidth(), (this.height / 2) - 24, 16777215);
+        ((GuiCheckBox) this.buttonList.get(0)).setChecked(this.diConfig.portraitEnabled);
+        ((GuiCheckBox) this.buttonList.get(1)).setChecked(this.diConfig.enablePotionEffects);
+        ((GuiCheckBox) this.buttonList.get(2)).setChecked(this.diConfig.popOffsEnabled);
+        super.drawScreen(par1, par2, par3);
         GL11.glDepthFunc(519);
         if (mouseOver) {
             GL11.glPushMatrix();
-            this.field_146289_q.func_78256_a("<Drag Me>");
+            this.fontRenderer.getStringWidth("<Drag Me>");
             GL11.glTranslatef(par1, par2, 0.0f);
-            func_73734_a(0, 0, 60, 20, 1996488704);
-            func_73734_a(0, 2, 60, 0, -1441726384);
-            func_73734_a(0, 22, 60, 20, -1441726384);
-            func_73734_a(0, 0, 2, 22, -1441726384);
-            func_73734_a(58, 0, 60, 22, -1441726384);
-            this.field_146289_q.func_78276_b("<Drag Me>", 7, 7, -1429418804);
+            drawRect(0, 0, 60, 20, 1996488704);
+            drawRect(0, 2, 60, 0, -1441726384);
+            drawRect(0, 22, 60, 20, -1441726384);
+            drawRect(0, 0, 2, 22, -1441726384);
+            drawRect(58, 0, 60, 22, -1441726384);
+            this.fontRenderer.drawString("<Drag Me>", 7, 7, -1429418804);
             GL11.glPopMatrix();
         }
         if (mouseOver2) {
             GL11.glPushMatrix();
-            this.field_146289_q.func_78256_a("This option may decrease performance.");
+            this.fontRenderer.getStringWidth("This option may decrease performance.");
             GL11.glTranslatef(par1, par2 - 22, 0.0f);
-            func_73734_a(0, 0, 210, 20, 1996488704);
-            func_73734_a(0, 2, 210, 0, -1441726384);
-            func_73734_a(0, 22, 210, 20, -1441726384);
-            func_73734_a(0, 0, 2, 22, -1441726384);
-            func_73734_a(208, 0, 210, 22, -1441726384);
-            this.field_146289_q.func_78276_b("This option may decrease performance.", 7, 7, -1429418804);
+            drawRect(0, 0, 210, 20, 1996488704);
+            drawRect(0, 2, 210, 0, -1441726384);
+            drawRect(0, 22, 210, 20, -1441726384);
+            drawRect(0, 0, 2, 22, -1441726384);
+            drawRect(208, 0, 210, 22, -1441726384);
+            this.fontRenderer.drawString("This option may decrease performance.", 7, 7, -1429418804);
             GL11.glPopMatrix();
         }
         GL11.glDepthFunc(515);
         GL11.glEnable(2929);
     }
 
-    public void func_73866_w_() {
-        super.func_73866_w_();
+    public void initGui() {
+        super.initGui();
         this.diConfig = DIConfig.mainInstance();
-        int enablePortrait = this.field_146289_q.func_78256_a("Enable Portrait") + 12;
-        this.field_146292_n.add(0, new GuiCheckBox(0, (this.field_146294_l / 2) - (enablePortrait / 2), (this.field_146295_m / 2) - 66, enablePortrait, 16, "Enable Portrait"));
-        ((GuiCheckBox) this.field_146292_n.get(0)).setChecked(this.diConfig.portraitEnabled);
-        int enablePotionEffects = this.field_146289_q.func_78256_a("Enable PotionEffects") + 12;
-        this.field_146292_n.add(1, new GuiCheckBox(1, (this.field_146294_l / 2) - (enablePotionEffects / 2), (this.field_146295_m / 2) - 52, enablePotionEffects, 16, "Enable PotionEffects"));
-        ((GuiCheckBox) this.field_146292_n.get(1)).setChecked(true);
-        int enablePopOffsWidth = this.field_146289_q.func_78256_a("Enable PopOffs") + 12;
-        this.field_146292_n.add(2, new GuiCheckBox(2, (this.field_146294_l / 2) - (enablePopOffsWidth / 2), (this.field_146295_m / 2) - 38, enablePopOffsWidth, 16, "Enable PopOffs"));
-        ((GuiCheckBox) this.field_146292_n.get(2)).setChecked(true);
-        int enableSkinWidth = this.field_146289_q.func_78256_a("Select Skin...") + 8;
-        this.field_146292_n.add(3, new GuiButton(3, (this.field_146294_l / 2) - (enableSkinWidth / 2), (this.field_146295_m / 2) + 34, enableSkinWidth, 20, "Select Skin..."));
-        ((GuiButton) this.field_146292_n.get(3)).field_146124_l = true;
-        int AdvancedWidth = this.field_146289_q.func_78256_a("Advanced") + 8;
-        this.field_146292_n.add(4, new GuiButton(4, (this.field_146294_l - AdvancedWidth) - 4, this.field_146295_m - 24, AdvancedWidth, 20, "Advanced"));
-        this.field_146292_n.add(5, new GuiButton(5, this.field_146294_l - 24, 4, 20, 20, "X"));
-        int enablePortrait2 = this.field_146289_q.func_78256_a("Alternate Render Method") + 12;
-        this.field_146292_n.add(6, new GuiCheckBox(6, (this.field_146294_l / 2) - (enablePortrait2 / 2), (this.field_146295_m / 2) - 80, enablePortrait2, 16, "Alternate Render Method"));
-        this.field_146292_n.add(7, new GuiCheckBox(7, 5, this.field_146295_m - 12, this.field_146289_q.func_78256_a("High Compatibility Rendering") + 12, 16, "High Compatibility Rendering"));
-        this.textWidth = this.field_146289_q.func_78256_a("Gui Scale") + 8;
-        this.gtf = new GuiTextField(8, this.field_146289_q, ((this.field_146294_l / 2) + 40) - (this.textWidth / 2), (this.field_146295_m / 2) - 24, 30, 20);
-        this.gtf.func_146180_a(String.valueOf(MathHelper.func_76141_d(this.diConfig.guiScale * 100.0f)));
-        this.gtf.func_146203_f(3);
-        this.gtf.func_146185_a(false);
-        this.gtf.func_146189_e(true);
+        int enablePortrait = this.fontRenderer.getStringWidth("Enable Portrait") + 12;
+        this.buttonList.add(0, new GuiCheckBox(0, (this.width / 2) - (enablePortrait / 2), (this.height / 2) - 66, enablePortrait, 16, "Enable Portrait"));
+        ((GuiCheckBox) this.buttonList.get(0)).setChecked(this.diConfig.portraitEnabled);
+        int enablePotionEffects = this.fontRenderer.getStringWidth("Enable PotionEffects") + 12;
+        this.buttonList.add(1, new GuiCheckBox(1, (this.width / 2) - (enablePotionEffects / 2), (this.height / 2) - 52, enablePotionEffects, 16, "Enable PotionEffects"));
+        ((GuiCheckBox) this.buttonList.get(1)).setChecked(true);
+        int enablePopOffsWidth = this.fontRenderer.getStringWidth("Enable PopOffs") + 12;
+        this.buttonList.add(2, new GuiCheckBox(2, (this.width / 2) - (enablePopOffsWidth / 2), (this.height / 2) - 38, enablePopOffsWidth, 16, "Enable PopOffs"));
+        ((GuiCheckBox) this.buttonList.get(2)).setChecked(true);
+        int enableSkinWidth = this.fontRenderer.getStringWidth("Select Skin...") + 8;
+        this.buttonList.add(3, new GuiButton(3, (this.width / 2) - (enableSkinWidth / 2), (this.height / 2) + 34, enableSkinWidth, 20, "Select Skin..."));
+        ((GuiButton) this.buttonList.get(3)).enabled = true;
+        int AdvancedWidth = this.fontRenderer.getStringWidth("Advanced") + 8;
+        this.buttonList.add(4, new GuiButton(4, (this.width - AdvancedWidth) - 4, this.height - 24, AdvancedWidth, 20, "Advanced"));
+        this.buttonList.add(5, new GuiButton(5, this.width - 24, 4, 20, 20, "X"));
+        int enablePortrait2 = this.fontRenderer.getStringWidth("Alternate Render Method") + 12;
+        this.buttonList.add(6, new GuiCheckBox(6, (this.width / 2) - (enablePortrait2 / 2), (this.height / 2) - 80, enablePortrait2, 16, "Alternate Render Method"));
+        this.buttonList.add(7, new GuiCheckBox(7, 5, this.height - 12, this.fontRenderer.getStringWidth("High Compatibility Rendering") + 12, 16, "High Compatibility Rendering"));
+        this.textWidth = this.fontRenderer.getStringWidth("Gui Scale") + 8;
+        this.gtf = new GuiTextField(8, this.fontRenderer, ((this.width / 2) + 40) - (this.textWidth / 2), (this.height / 2) - 24, 30, 20);
+        this.gtf.setText(String.valueOf(MathHelper.floor(this.diConfig.guiScale * 100.0f)));
+        this.gtf.setMaxStringLength(3);
+        this.gtf.setEnableBackgroundDrawing(false);
+        this.gtf.setVisible(true);
         drawColorbar();
         drawGradient(255, 0, 255);
         GL11.glClear(256);
     }
 
-    protected void func_73869_a(char par1, int par2) throws IOException {
+    protected void keyTyped(char par1, int par2) throws IOException {
         if (par2 != 14 && par2 != 211) {
             if (Character.isDigit(par1)) {
-                this.gtf.func_146201_a(par1, par2);
-                int setVal = Integer.valueOf(this.gtf.func_146179_b()).intValue();
+                this.gtf.textboxKeyTyped(par1, par2);
+                int setVal = Integer.valueOf(this.gtf.getText()).intValue();
                 if (setVal > 200) {
-                    int p = this.gtf.func_146198_h();
-                    this.gtf.func_146180_a("200");
-                    this.gtf.func_146190_e(p);
+                    int p = this.gtf.getCursorPosition();
+                    this.gtf.setText("200");
+                    this.gtf.setCursorPosition(p);
                 }
             }
         } else {
-            this.gtf.func_146201_a(par1, par2);
-            super.func_73869_a(par1, par2);
-            if (this.gtf.func_146179_b().length() == 0) {
-                this.gtf.func_146180_a("0");
-                this.gtf.func_146196_d();
-                this.gtf.func_146199_i(1);
+            this.gtf.textboxKeyTyped(par1, par2);
+            super.keyTyped(par1, par2);
+            if (this.gtf.getText().length() == 0) {
+                this.gtf.setText("0");
+                this.gtf.setCursorPositionZero();
+                this.gtf.setSelectionPos(1);
             }
         }
-        this.diConfig.guiScale = Float.valueOf(this.gtf.func_146179_b()).floatValue() / 100.0f;
-        super.func_73869_a(par1, par2);
+        this.diConfig.guiScale = Float.valueOf(this.gtf.getText()).floatValue() / 100.0f;
+        super.keyTyped(par1, par2);
     }
 
-    protected void func_73864_a(int par1, int par2, int par3) throws IOException {
+    protected void mouseClicked(int par1, int par2, int par3) throws IOException {
         if (par3 == 0) {
             try {
-                if (par2 >= (this.field_146295_m / 2) - 36 && par2 <= (this.field_146295_m / 2) + 28) {
+                if (par2 >= (this.height / 2) - 36 && par2 <= (this.height / 2) + 28) {
                     if (this.setDamageColor) {
-                        if (par1 >= (this.field_146294_l / 2) + 53 && par1 <= (this.field_146294_l / 2) + 116) {
-                            int ex1 = par1 - ((this.field_146294_l / 2) + 53);
-                            int y = par2 - ((this.field_146295_m / 2) - 36);
+                        if (par1 >= (this.width / 2) + 53 && par1 <= (this.width / 2) + 116) {
+                            int ex1 = par1 - ((this.width / 2) + 53);
+                            int y = par2 - ((this.height / 2) - 36);
                             this.diConfig.DIColor = this.Gradient.getRGB(ex1 * 4, y * 4);
                             this.setDamageColor = false;
                             return;
-                        } else if (par1 >= (this.field_146294_l / 2) + 119 && par1 <= (this.field_146294_l / 2) + 123) {
-                            int y2 = par2 - ((this.field_146295_m / 2) - 36);
+                        } else if (par1 >= (this.width / 2) + 119 && par1 <= (this.width / 2) + 123) {
+                            int y2 = par2 - ((this.height / 2) - 36);
                             int pixelcolor = this.colorBar.getRGB(1, y2 * (this.colorBar.getHeight() / 64));
                             drawGradient((pixelcolor >> 16) & 255, (pixelcolor >> 8) & 255, pixelcolor & 255);
                         }
                     } else if (this.setHealColor) {
-                        if (par1 >= (this.field_146294_l / 2) + 53 && par1 <= (this.field_146294_l / 2) + 116) {
-                            int ex12 = par1 - ((this.field_146294_l / 2) + 53);
-                            int y3 = par2 - ((this.field_146295_m / 2) - 36);
+                        if (par1 >= (this.width / 2) + 53 && par1 <= (this.width / 2) + 116) {
+                            int ex12 = par1 - ((this.width / 2) + 53);
+                            int y3 = par2 - ((this.height / 2) - 36);
                             this.diConfig.healColor = this.Gradient.getRGB(ex12 * 4, y3 * 4);
                             this.setHealColor = false;
                             return;
-                        } else if (par1 >= (this.field_146294_l / 2) + 119 && par1 <= (this.field_146294_l / 2) + 123) {
-                            int y4 = par2 - ((this.field_146295_m / 2) - 36);
+                        } else if (par1 >= (this.width / 2) + 119 && par1 <= (this.width / 2) + 123) {
+                            int y4 = par2 - ((this.height / 2) - 36);
                             int pixelcolor2 = this.colorBar.getRGB(1, y4 * (this.colorBar.getHeight() / 64));
                             drawGradient((pixelcolor2 >> 16) & 255, (pixelcolor2 >> 8) & 255, pixelcolor2 & 255);
                             return;
                         }
                     }
                 }
-                if (par1 >= (((this.field_146294_l / 2) + 30) - (this.textWidth / 2)) + 30 && par1 <= (((this.field_146294_l / 2) + 30) - (this.textWidth / 2)) + 30 + 15) {
-                    if (par2 >= (this.field_146295_m / 2) - 5 && par2 <= (this.field_146295_m / 2) + 10) {
+                if (par1 >= (((this.width / 2) + 30) - (this.textWidth / 2)) + 30 && par1 <= (((this.width / 2) + 30) - (this.textWidth / 2)) + 30 + 15) {
+                    if (par2 >= (this.height / 2) - 5 && par2 <= (this.height / 2) + 10) {
                         this.setDamageColor = true;
                         this.setHealColor = false;
                         drawGradient((this.diConfig.DIColor >> 16) & 255, (this.diConfig.DIColor >> 8) & 255, this.diConfig.DIColor & 255);
-                    } else if (par2 >= (this.field_146295_m / 2) - 25 && par2 <= (this.field_146295_m / 2) + 30) {
+                    } else if (par2 >= (this.height / 2) - 25 && par2 <= (this.height / 2) + 30) {
                         this.setHealColor = true;
                         this.setDamageColor = false;
                         drawGradient((this.diConfig.healColor >> 16) & 255, (this.diConfig.healColor >> 8) & 255, this.diConfig.healColor & 255);
@@ -388,24 +388,24 @@ public class RepositionGui extends GuiScreen {
                 this.mouseDown = true;
             }
         }
-        this.gtf.func_146192_a(par1, par2, par3);
-        super.func_73864_a(par1, par2, par3);
+        this.gtf.mouseClicked(par1, par2, par3);
+        super.mouseClicked(par1, par2, par3);
     }
 
-    protected void func_146286_b(int mouseX, int mouseY, int state) {
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
         if (state == 0) {
             this.mouseDown = false;
         }
-        super.func_146286_b(mouseX, mouseY, state);
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
-    public void func_146281_b() {
+    public void onGuiClosed() {
         DIConfig.overrideConfigAndSave(this.diConfig);
-        super.func_146281_b();
+        super.onGuiClosed();
     }
 
-    public void func_73876_c() {
-        this.gtf.func_146178_a();
-        super.func_73876_c();
+    public void updateScreen() {
+        this.gtf.updateCursorCounter();
+        super.updateScreen();
     }
 }

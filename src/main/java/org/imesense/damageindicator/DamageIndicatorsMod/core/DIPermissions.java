@@ -1,6 +1,6 @@
-package DamageIndicatorsMod.core;
+package org.imesense.damageindicator.DamageIndicatorsMod.core;
 
-import DamageIndicatorsMod.DIMod;
+import org.imesense.damageindicator.DamageIndicatorMod;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
@@ -42,7 +42,7 @@ public class DIPermissions implements IMessage {
         public static boolean popOffsDisabled = false;
 
         public DIPermissions onMessage(DIPermissions message, MessageContext ctx) {
-            processPermissions(DIMod.proxy.getPlayer(), (byte) 0);
+            processPermissions(DamageIndicatorMod.proxy.getPlayer(), (byte) 0);
             return null;
         }
 
@@ -52,19 +52,19 @@ public class DIPermissions implements IMessage {
             potionEffectsDisabled = (toggles & 4) != 0;
             popOffsDisabled = (toggles & 8) != 0;
             if (mouseOversDisabled || allDisabled) {
-                player.func_145747_a(new TextComponentString("[DamageIndicators] §4Server has disabled mouseovers."));
+                player.sendMessage(new TextComponentString("[DamageIndicators] §4Server has disabled mouseovers."));
             } else {
-                player.func_145747_a(new TextComponentString("[DamageIndicators] §2Mouseovers enabled."));
+                player.sendMessage(new TextComponentString("[DamageIndicators] §2Mouseovers enabled."));
             }
             if (potionEffectsDisabled || allDisabled) {
-                player.func_145747_a(new TextComponentString("[DamageIndicators] §4Server has disabled potion effects."));
+                player.sendMessage(new TextComponentString("[DamageIndicators] §4Server has disabled potion effects."));
             } else {
-                player.func_145747_a(new TextComponentString("[DamageIndicators] §2Potion Effects enabled."));
+                player.sendMessage(new TextComponentString("[DamageIndicators] §2Potion Effects enabled."));
             }
             if (popOffsDisabled || allDisabled) {
-                player.func_145747_a(new TextComponentString("[DamageIndicators] §4Server has disabled damage popoffs."));
+                player.sendMessage(new TextComponentString("[DamageIndicators] §4Server has disabled damage popoffs."));
             } else {
-                player.func_145747_a(new TextComponentString("[DamageIndicators] §2Popoffs enabled."));
+                player.sendMessage(new TextComponentString("[DamageIndicators] §2Popoffs enabled."));
             }
         }
     }

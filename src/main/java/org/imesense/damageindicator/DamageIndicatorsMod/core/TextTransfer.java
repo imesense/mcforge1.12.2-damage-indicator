@@ -1,4 +1,4 @@
-package DamageIndicatorsMod.core;
+package org.imesense.damageindicator.DamageIndicatorsMod.core;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;

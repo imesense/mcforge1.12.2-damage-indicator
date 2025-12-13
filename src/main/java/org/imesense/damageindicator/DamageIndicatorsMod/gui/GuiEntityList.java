@@ -1,7 +1,7 @@
-package DamageIndicatorsMod.gui;
+package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
-import DamageIndicatorsMod.core.EntityConfigurationEntry;
-import DamageIndicatorsMod.core.Tools;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.EntityConfigurationEntry;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.Tools;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +41,13 @@ public class GuiEntityList extends GuiScrollingList {
     }
 
     protected void drawBackground() {
-        this.parent.func_146278_c(2);
+        this.parent.drawBackground(2);
     }
 
     protected void drawSlot(int listIndex, int var2, int var3, int var4, Tessellator var5) {
         try {
             Map classToStringMapping = Tools.getEntityList();
-            String entryName = classToStringMapping.get(this.visibleEntities.get(listIndex).Clazz);
+            String entryName = (String) classToStringMapping.get(this.visibleEntities.get(listIndex).Clazz);
             if (this.visibleEntities.get(listIndex).NameOverride != null && !"".equals(this.visibleEntities.get(listIndex).NameOverride)) {
                 entryName = this.visibleEntities.get(listIndex).NameOverride;
             } else if (entryName == null || "".equals(entryName)) {
@@ -67,13 +67,13 @@ public class GuiEntityList extends GuiScrollingList {
             } else if (this.visibleEntities.get(listIndex).Clazz == EntityLiving.class) {
                 this.visibleEntities.remove(listIndex);
             }
-            this.parent.getFontRenderer().func_78276_b(this.parent.getFontRenderer().func_78269_a(entryName, this.listWidth - 10), this.left + 3, var3 + 2, 16777215);
+            this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(entryName, this.listWidth - 10), this.left + 3, var3 + 2, 16777215);
             String ModName1 = "Vanilla/Unknown Mod";
             EntityRegistry.EntityRegistration er = EntityRegistry.instance().lookupModSpawn(this.visibleEntities.get(listIndex).Clazz, true);
             if (er != null) {
                 ModName1 = er.getContainer().getName();
             }
-            this.parent.getFontRenderer().func_78276_b(this.parent.getFontRenderer().func_78269_a(ModName1, this.listWidth - 10), this.left + 3, var3 + 12, 10066431);
+            this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(ModName1, this.listWidth - 10), this.left + 3, var3 + 12, 10066431);
         } catch (Throwable th) {
         }
     }

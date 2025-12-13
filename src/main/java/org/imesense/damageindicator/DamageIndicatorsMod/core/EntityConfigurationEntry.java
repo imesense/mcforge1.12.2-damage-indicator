@@ -1,7 +1,7 @@
-package DamageIndicatorsMod.core;
+package org.imesense.damageindicator.DamageIndicatorsMod.core;
 
-import DamageIndicatorsMod.DIMod;
-import DamageIndicatorsMod.configuration.DIConfig;
+import org.imesense.damageindicator.DamageIndicatorMod;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
 import java.io.File;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -180,14 +180,14 @@ public class EntityConfigurationEntry {
         } catch (Exception e) {
             if (configfile.exists()) {
                 if (!lasttimefailed) {
-                    DIMod.log.warn("Per mob configuration file was corrupt! Attempting to purge and recreate...");
+                    DamageIndicatorMod.log.warn("Per mob configuration file was corrupt! Attempting to purge and recreate...");
                     if (!configfile.delete()) {
                         configfile.deleteOnExit();
                     }
                     lasttimefailed = true;
                     return getEntityConfiguration();
                 }
-                DIMod.log.warn("Failed to recreate configuration! Configuration should be deleted when minecraft closes.");
+                DamageIndicatorMod.log.warn("Failed to recreate configuration! Configuration should be deleted when minecraft closes.");
                 throw new RuntimeException("DIAdvancedCompatibility was currupt and was unable to recreate the file.");
             }
             throw new RuntimeException("Exception while creating " + configfile.getAbsolutePath(), e);

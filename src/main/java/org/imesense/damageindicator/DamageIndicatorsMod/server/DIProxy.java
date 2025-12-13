@@ -1,4 +1,4 @@
-package DamageIndicatorsMod.server;
+package org.imesense.damageindicator.DamageIndicatorsMod.server;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,7 @@ public class DIProxy {
         if (this.dimod == null) {
             for (ModContainer modContainer : Loader.instance().getModList()) {
                 this.dimod = modContainer;
-                if (this.dimod != null && this.dimod.getName().equals("Damage Indicators")) {
+                if (this.dimod != null && this.dimod.getName().equals("Damage Indicator")) {
                     return;
                 }
             }

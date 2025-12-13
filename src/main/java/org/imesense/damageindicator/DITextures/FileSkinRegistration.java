@@ -1,4 +1,4 @@
-package DITextures;
+package org.imesense.damageindicator.DITextures;
 
 import java.io.File;
 import java.io.FileInputStream;

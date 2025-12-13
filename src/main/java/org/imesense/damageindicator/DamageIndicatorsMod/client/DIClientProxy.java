@@ -1,12 +1,12 @@
-package DamageIndicatorsMod.client;
+package org.imesense.damageindicator.DamageIndicatorsMod.client;
 
-import DITextures.JarSkinRegistration;
-import DamageIndicatorsMod.DIMod;
-import DamageIndicatorsMod.configuration.DIConfig;
-import DamageIndicatorsMod.core.DIEventBus;
-import DamageIndicatorsMod.core.Tools;
-import DamageIndicatorsMod.rendering.DIWordParticles;
-import DamageIndicatorsMod.server.DIProxy;
+import org.imesense.damageindicator.DITextures.JarSkinRegistration;
+import org.imesense.damageindicator.DamageIndicatorMod;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.DIEventBus;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.Tools;
+import org.imesense.damageindicator.DamageIndicatorsMod.rendering.DIWordParticles;
+import org.imesense.damageindicator.DamageIndicatorsMod.server.DIProxy;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -31,9 +31,9 @@ public class DIClientProxy extends DIProxy {
         MinecraftForge.EVENT_BUS.register(seh);
         Tools.getInstance().RegisterRenders();
         JarSkinRegistration.init();
-        Minecraft.func_71410_x().field_71452_i.func_178929_a(this.wordParticle, particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, p_178902_15_ -> {
+        Minecraft.getMinecraft().effectRenderer.registerParticle(this.wordParticle, (particleID, worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, parameters) -> {
             DIWordParticles customParticle = new DIWordParticles(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
-            if (p_178902_15_[0] == 1) {
+            if (parameters[0] == 1) {
                 customParticle.shouldOnTop = true;
             }
             return customParticle;
@@ -43,19 +43,19 @@ public class DIClientProxy extends DIProxy {
     @Override // DamageIndicatorsMod.server.DIProxy
     public void doCritical(Entity target) {
         int shouldbeseen = 0;
-        if (Minecraft.func_71410_x().field_71439_g.func_70685_l(target)) {
+        if (Minecraft.getMinecraft().player.canEntityBeSeen(target)) {
             shouldbeseen = 1;
-        } else if (Minecraft.func_71410_x().func_71356_B()) {
+        } else if (Minecraft.getMinecraft().isSingleplayer()) {
             shouldbeseen = DIConfig.mainInstance().alwaysRender ? 1 : 0;
         }
-        if (target != Minecraft.func_71410_x().field_71439_g || Minecraft.func_71410_x().field_71474_y.field_74320_O != 0) {
-            Minecraft.func_71410_x().field_71452_i.func_178927_a(this.wordParticle, target.field_70165_t, target.field_70163_u + target.field_70131_O, target.field_70161_v, 0.001d, 0.05f * DIConfig.mainInstance().BounceStrength, 0.001d, new int[]{shouldbeseen});
+        if (target != Minecraft.getMinecraft().player || Minecraft.getMinecraft().gameSettings.thirdPersonView != 0) {
+            Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(this.wordParticle, target.posX, target.posY + target.height, target.posZ, 0.001d, 0.05f * DIConfig.mainInstance().BounceStrength, 0.001d, new int[]{shouldbeseen});
         }
     }
 
     @Override // DamageIndicatorsMod.server.DIProxy
     public EntityPlayer getPlayer() {
-        return Minecraft.func_71410_x().field_71439_g;
+        return Minecraft.getMinecraft().player;
     }
 
     @Override // DamageIndicatorsMod.server.DIProxy
@@ -82,7 +82,7 @@ public class DIClientProxy extends DIProxy {
                             }
                             String nextDonater2 = nextDonater.trim();
                             if (!nextDonater2.isEmpty()) {
-                                DIMod.donators.add(nextDonater2.toLowerCase());
+                                DamageIndicatorMod.donators.add(nextDonater2.toLowerCase());
                             }
                         }
                         br.close();
@@ -90,18 +90,18 @@ public class DIClientProxy extends DIProxy {
                     } catch (Throwable ex) {
                         ex.printStackTrace();
                         if (DIConfig.mainInstance().checkForUpdates >= 2) {
-                            DIMod.s_sUpdateMessage = "Damage Indicators was unable to check for updates!";
+                            DamageIndicatorMod.s_sUpdateMessage = "Damage Indicators was unable to check for updates!";
                         }
                     }
                     if (DIConfig.mainInstance().checkForUpdates == 0) {
-                        DIMod.s_sUpdateMessage = null;
+                        DamageIndicatorMod.s_sUpdateMessage = null;
                     }
                 }
             }).start();
         } catch (Throwable ex) {
             ex.printStackTrace();
             if (DIConfig.mainInstance().checkForUpdates >= 2) {
-                DIMod.s_sUpdateMessage = "Damage Indicators was unable to check for updates!";
+                DamageIndicatorMod.s_sUpdateMessage = "Damage Indicators was unable to check for updates!";
             }
         }
     }
