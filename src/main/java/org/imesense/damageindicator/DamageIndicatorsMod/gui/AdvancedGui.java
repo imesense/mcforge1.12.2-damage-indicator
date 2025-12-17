@@ -53,8 +53,8 @@ public class AdvancedGui extends GuiScreen {
 
     public void onGuiClosed() {
         super.onGuiClosed();
-        DIConfig.mainInstance().popOffsEnabled = this.popoffsetting;
-        DIConfig.mainInstance().portraitEnabled = this.portraitsetting;
+        DIConfig.popOffsEnabled = this.popoffsetting;
+        DIConfig.portraitEnabled = this.portraitsetting;
     }
 
     public boolean doesGuiPauseGame() {
@@ -62,10 +62,10 @@ public class AdvancedGui extends GuiScreen {
     }
 
     public void initGui() {
-        this.popoffsetting = DIConfig.mainInstance().popOffsEnabled;
-        this.portraitsetting = DIConfig.mainInstance().portraitEnabled;
-        DIConfig.mainInstance().popOffsEnabled = false;
-        DIConfig.mainInstance().portraitEnabled = false;
+        this.popoffsetting = DIConfig.popOffsEnabled;
+        this.portraitsetting = DIConfig.portraitEnabled;
+        DIConfig.popOffsEnabled = false;
+        DIConfig.portraitEnabled = false;
         GuiEntityList.entities = new ArrayList(Tools.getInstance().getEntityMap().values());
         Iterator<EntityConfigurationEntry> it = GuiEntityList.entities.iterator();
         while (it.hasNext()) {
@@ -233,7 +233,7 @@ public class AdvancedGui extends GuiScreen {
             }
             this.zLevel += 0.1f;
             GL11.glPushMatrix();
-            float var16 = DIConfig.mainInstance().guiScale;
+            float var16 = DIConfig.guiScale;
             GL11.glPushAttrib(8192);
             try {
                 float headPosY = 175.0f + ((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGMOBPREVIEWY)).intValue() + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGBACKGROUNDHEIGHT)).intValue() / 2.0f);
@@ -249,7 +249,7 @@ public class AdvancedGui extends GuiScreen {
                 this.tempMob.rotationPitch = ((float) Math.atan(headPosY2 / 40.0f)) * 20.0f;
                 this.tempMob.rotationYawHead = this.tempMob.rotationYaw;
                 this.tempMob.prevRotationYawHead = this.tempMob.rotationYaw;
-                DIConfig.mainInstance().guiScale = 1.0f;
+                DIConfig.guiScale = 1.0f;
                 DIGuiTools.DrawPortraitSkinned(150, 175, var14, (int) Math.ceil(this.tempMob == null ? 0.0d : this.tempMob.getHealth()), (int) Math.ceil(this.tempMob == null ? 0.0d : this.tempMob.getMaxHealth()), this.tempMob);
                 this.tempMob.renderYawOffset = f2;
                 this.tempMob.rotationYaw = f3;
@@ -260,7 +260,7 @@ public class AdvancedGui extends GuiScreen {
             }
             GL11.glPopAttrib();
             this.zLevel += 0.1f;
-            DIConfig.mainInstance().guiScale = var16;
+            DIConfig.guiScale = var16;
             GL11.glPopMatrix();
             super.drawScreen(par1, par2, par3);
             GL11.glPopMatrix();

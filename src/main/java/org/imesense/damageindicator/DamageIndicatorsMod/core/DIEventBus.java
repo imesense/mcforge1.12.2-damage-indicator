@@ -5,7 +5,6 @@ import org.imesense.damageindicator.DITextures.EnumSkinPart;
 import org.imesense.damageindicator.DamageIndicatorMod;
 import org.imesense.damageindicator.DamageIndicatorsMod.client.DIClientProxy;
 import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
-import org.imesense.damageindicator.DamageIndicatorsMod.core.DIPermissions;
 import org.imesense.damageindicator.DamageIndicatorsMod.gui.DIGuiTools;
 import org.imesense.damageindicator.DamageIndicatorsMod.gui.RepositionGui;
 import org.imesense.damageindicator.DamageIndicatorsMod.rendering.DIWordParticles;
@@ -96,11 +95,11 @@ public class DIEventBus {
         int lastHealth;
         if (healths.containsKey(Integer.valueOf(el.getEntityId())) && (lastHealth = healths.get(Integer.valueOf(el.getEntityId())).intValue()) != currentHealth) {
             int damage = lastHealth - currentHealth;
-            DIWordParticles customParticle = new DIWordParticles(Minecraft.getMinecraft().world, el.posX, el.posY + el.height, el.posZ, 0.001d, 0.05f * DIConfig.mainInstance().BounceStrength, 0.001d, damage);
+            DIWordParticles customParticle = new DIWordParticles(Minecraft.getMinecraft().world, el.posX, el.posY + el.height, el.posZ, 0.001d, 0.05f * DIConfig.BounceStrength, 0.001d, damage);
             if (Minecraft.getMinecraft().player.canEntityBeSeen(el)) {
                 customParticle.shouldOnTop = true;
             } else if (Minecraft.getMinecraft().isSingleplayer()) {
-                customParticle.shouldOnTop = DIConfig.mainInstance().alwaysRender;
+                customParticle.shouldOnTop = DIConfig.alwaysRender;
             }
             if (el != Minecraft.getMinecraft().player || Minecraft.getMinecraft().gameSettings.thirdPersonView != 0) {
                 Minecraft.getMinecraft().effectRenderer.addEffect(customParticle);
@@ -111,7 +110,7 @@ public class DIEventBus {
 
     @SubscribeEvent
     public void entityDeath(LivingDeathEvent evt) {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient() && DIConfig.mainInstance().popOffsEnabled) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient() && DIConfig.popOffsEnabled) {
             updateHealth(evt.getEntityLiving(), 0);
         }
         Object entityID = Integer.valueOf(evt.getEntity().getEntityId());
@@ -172,7 +171,7 @@ public class DIEventBus {
         EntityPlayerSP entityPlayerSP;
         if (!"".equals(DamageIndicatorMod.s_sUpdateMessage)) {
             if (FMLCommonHandler.instance().getSide().isServer()) {
-                DamageIndicatorMod.log.info(DamageIndicatorMod.s_sUpdateMessage);
+                DamageIndicatorMod.logger.info(DamageIndicatorMod.s_sUpdateMessage);
                 DamageIndicatorMod.s_sUpdateMessage = "";
             } else if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
                 Minecraft.getMinecraft().player.sendMessage(new TextComponentString(DamageIndicatorMod.s_sUpdateMessage));
@@ -197,7 +196,7 @@ public class DIEventBus {
             }
         }
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-            if (DIConfig.mainInstance().popOffsEnabled) {
+            if (DIConfig.popOffsEnabled) {
                 updateHealth(el, MathHelper.ceil(el.getHealth()));
             }
             if (evt.getEntity().isDead) {
@@ -268,18 +267,18 @@ public class DIEventBus {
             RepositionGui gui = new RepositionGui();
             Minecraft.getMinecraft().displayGuiScreen(gui);
         }
-        boolean flag = DIConfig.mainInstance().alternateRenderingMethod && event.getType() == RenderGameOverlayEvent.ElementType.CHAT;
+        boolean flag = DIConfig.alternateRenderingMethod && event.getType() == RenderGameOverlayEvent.ElementType.CHAT;
         if (!flag) {
-            flag = event.getType() == RenderGameOverlayEvent.ElementType.PORTAL && !DIConfig.mainInstance().alternateRenderingMethod;
+            flag = event.getType() == RenderGameOverlayEvent.ElementType.PORTAL && !DIConfig.alternateRenderingMethod;
         }
-        if (event.getType() == RenderGameOverlayEvent.ElementType.BOSSHEALTH && DIConfig.mainInstance().supressBossUI) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.BOSSHEALTH && DIConfig.supressBossUI) {
             if (event.isCancelable()) {
                 event.setCanceled(true);
             }
         } else if (flag && Minecraft.getMinecraft().player != null) {
             if (Minecraft.getMinecraft().gameSettings.hideGUI) {
                 LastTargeted = 0;
-            } else if (Minecraft.getMinecraft().gameSettings.showDebugInfo && DIConfig.mainInstance().DebugHidesWindow) {
+            } else if (Minecraft.getMinecraft().gameSettings.showDebugInfo && DIConfig.DebugHidesWindow) {
                 LastTargeted = 0;
             } else if (Minecraft.getMinecraft().currentScreen != null && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat)) {
                 LastTargeted = 0;
@@ -290,13 +289,13 @@ public class DIEventBus {
                     searched = true;
                 }
                 try {
-                    if (DIConfig.mainInstance().portraitEnabled && !DIPermissions.Handler.allDisabled && !DIPermissions.Handler.mouseOversDisabled) {
-                        if (DIConfig.mainInstance().highCompatibilityMod) {
+                    if (DIConfig.portraitEnabled && !DIPermissions.Handler.allDisabled && !DIPermissions.Handler.mouseOversDisabled) {
+                        if (DIConfig.highCompatibilityMod) {
                             GL11.glPushAttrib(1048575);
                             GL11.glPushClientAttrib(-1);
                         }
                         updateMouseOversSkinned(0.5f);
-                        if (DIConfig.mainInstance().highCompatibilityMod) {
+                        if (DIConfig.highCompatibilityMod) {
                             GL11.glPopClientAttrib();
                             GL11.glPopAttrib();
                         }
@@ -322,12 +321,12 @@ public class DIEventBus {
             updateSkip = i - 1;
             if (i <= 0) {
                 updateSkip = 4;
-                el = RaytraceUtil.getClosestLivingEntity(Minecraft.getMinecraft().player, DIConfig.mainInstance().mouseoverRange);
+                el = RaytraceUtil.getClosestLivingEntity(Minecraft.getMinecraft().player, DIConfig.mouseoverRange);
                 if (el != null && el.getHealth() <= 0.0f) {
                     el = null;
                 }
             }
-            if (Minecraft.getMinecraft().player.getName().contains("rich1051414") && Minecraft.getMinecraft().player.isSneaking() && (tmp = RaytraceUtil.getClosestEntity(Minecraft.getMinecraft().player, DIConfig.mainInstance().mouseoverRange)) != null && tmp != last) {
+            if (Minecraft.getMinecraft().player.getName().contains("rich1051414") && Minecraft.getMinecraft().player.isSneaking() && (tmp = RaytraceUtil.getClosestEntity(Minecraft.getMinecraft().player, DIConfig.mouseoverRange)) != null && tmp != last) {
                 last = tmp;
                 Minecraft.getMinecraft().player.sendMessage(new TextComponentString(tmp.getClass().getName()));
                 TextTransfer textTransfer = new TextTransfer();
@@ -352,22 +351,22 @@ public class DIEventBus {
                 if (LastTargeted == 0) {
                     return;
                 }
-                if (DIConfig.mainInstance().portraitLifetime != -1 && tick <= 0.0d) {
+                if (DIConfig.portraitLifetime != -1 && tick <= 0.0d) {
                     return;
                 }
             }
             ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
-            if (DIConfig.mainInstance().locX > scaledresolution.getScaledWidth() - 135) {
-                DIConfig.mainInstance().locX = scaledresolution.getScaledWidth() - 135;
+            if (DIConfig.locX > scaledresolution.getScaledWidth() - 135) {
+                DIConfig.locX = scaledresolution.getScaledWidth() - 135;
             }
-            if (DIConfig.mainInstance().locY > scaledresolution.getScaledHeight() - 50) {
-                DIConfig.mainInstance().locY = scaledresolution.getScaledHeight() - 50;
+            if (DIConfig.locY > scaledresolution.getScaledHeight() - 50) {
+                DIConfig.locY = scaledresolution.getScaledHeight() - 50;
             }
-            if (DIConfig.mainInstance().locX < 0) {
-                DIConfig.mainInstance().locX = 0;
+            if (DIConfig.locX < 0) {
+                DIConfig.locX = 0;
             }
-            if (DIConfig.mainInstance().locY < 0) {
-                DIConfig.mainInstance().locY = 0;
+            if (DIConfig.locY < 0) {
+                DIConfig.locY = 0;
             }
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             if (el == null) {
@@ -381,7 +380,7 @@ public class DIEventBus {
                     LastTargeted = 0;
                 }
             } else {
-                tick = DIConfig.mainInstance().portraitLifetime;
+                tick = DIConfig.portraitLifetime;
             }
             if (el == null) {
                 return;
@@ -415,10 +414,10 @@ public class DIEventBus {
                 Name = "§o" + Name2;
             }
             GL11.glPushMatrix();
-            GL11.glTranslatef((1.0f - DIConfig.mainInstance().guiScale) * DIConfig.mainInstance().locX, (1.0f - DIConfig.mainInstance().guiScale) * DIConfig.mainInstance().locY, 0.0f);
-            GL11.glScalef(DIConfig.mainInstance().guiScale, DIConfig.mainInstance().guiScale, DIConfig.mainInstance().guiScale);
+            GL11.glTranslatef((1.0f - DIConfig.guiScale) * DIConfig.locX, (1.0f - DIConfig.guiScale) * DIConfig.locY, 0.0f);
+            GL11.glScalef(DIConfig.guiScale, DIConfig.guiScale, DIConfig.guiScale);
             try {
-                DIGuiTools.DrawPortraitSkinned(DIConfig.mainInstance().locX, DIConfig.mainInstance().locY, Name, MathHelper.ceil(el.getHealth()), MathHelper.ceil(el.getMaxHealth()), el);
+                DIGuiTools.DrawPortraitSkinned(DIConfig.locX, DIConfig.locY, Name, MathHelper.ceil(el.getHealth()), MathHelper.ceil(el.getMaxHealth()), el);
                 if (Calendar.getInstance().getWeekYear() + 3 > Calendar.getInstance().getWeeksInWeekYear()) {
                     FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
                     int intValue = ((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGFRAMEY)).intValue() + 75;

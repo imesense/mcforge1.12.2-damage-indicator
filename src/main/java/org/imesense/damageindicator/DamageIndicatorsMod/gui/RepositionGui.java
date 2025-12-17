@@ -169,13 +169,13 @@ public class RepositionGui extends GuiScreen {
             ((GuiCheckBox) this.buttonList.get(1)).enabled = true;
             GL11.glPushMatrix();
             GL11.glColor3f(1.0f, 1.0f, 1.0f);
-            GL11.glTranslatef((1.0f - DIConfig.mainInstance().guiScale) * DIConfig.mainInstance().locX, (1.0f - DIConfig.mainInstance().guiScale) * DIConfig.mainInstance().locY, 0.0f);
-            GL11.glScalef(DIConfig.mainInstance().guiScale, DIConfig.mainInstance().guiScale, 1.0f);
+            GL11.glTranslatef((1.0f - DIConfig.guiScale) * DIConfig.locX, (1.0f - DIConfig.guiScale) * DIConfig.locY, 0.0f);
+            GL11.glScalef(DIConfig.guiScale, DIConfig.guiScale, 1.0f);
             GL11.glPushAttrib(8192);
-            float headPosX = DIConfig.mainInstance().locX;
-            float headPosX2 = headPosX + ((((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGMOBPREVIEWX)).intValue() + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGBACKGROUNDWIDTH)).intValue() / 2.0f)) * DIConfig.mainInstance().guiScale);
-            float headPosY = DIConfig.mainInstance().locY;
-            float headPosY2 = headPosY + ((((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGMOBPREVIEWY)).intValue() + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGBACKGROUNDHEIGHT)).intValue() / 2.0f)) * DIConfig.mainInstance().guiScale);
+            float headPosX = DIConfig.locX;
+            float headPosX2 = headPosX + ((((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGMOBPREVIEWX)).intValue() + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGBACKGROUNDWIDTH)).intValue() / 2.0f)) * DIConfig.guiScale);
+            float headPosY = DIConfig.locY;
+            float headPosY2 = headPosY + ((((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGMOBPREVIEWY)).intValue() + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGBACKGROUNDHEIGHT)).intValue() / 2.0f)) * DIConfig.guiScale);
             float headPosX3 = par1 - headPosX2;
             float headPosY3 = par2 - headPosY2;
             float f2 = this.mc.player.renderYawOffset;
@@ -286,7 +286,6 @@ public class RepositionGui extends GuiScreen {
 
     public void initGui() {
         super.initGui();
-        this.diConfig = DIConfig.mainInstance();
         int enablePortrait = this.fontRenderer.getStringWidth("Enable Portrait") + 12;
         this.buttonList.add(0, new GuiCheckBox(0, (this.width / 2) - (enablePortrait / 2), (this.height / 2) - 66, enablePortrait, 16, "Enable Portrait"));
         ((GuiCheckBox) this.buttonList.get(0)).setChecked(this.diConfig.portraitEnabled);
@@ -400,7 +399,6 @@ public class RepositionGui extends GuiScreen {
     }
 
     public void onGuiClosed() {
-        DIConfig.overrideConfigAndSave(this.diConfig);
         super.onGuiClosed();
     }
 

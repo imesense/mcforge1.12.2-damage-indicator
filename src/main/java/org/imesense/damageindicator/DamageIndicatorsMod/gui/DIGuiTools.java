@@ -198,8 +198,8 @@ public class DIGuiTools extends GuiIngame {
             int boxHeight = MathHelper.floor(backgroundHeight * scaledresolution.getScaleFactor());
             int boxLocY = MathHelper.floor((locY + MobPreviewOffsetY) * scaledresolution.getScaleFactor());
             if (!(f2mc.currentScreen instanceof AdvancedGui)) {
-                boxWidth = (int) (boxWidth * DIConfig.mainInstance().guiScale);
-                boxHeight = (int) (boxHeight * DIConfig.mainInstance().guiScale);
+                boxWidth = (int) (boxWidth * DIConfig.guiScale);
+                boxHeight = (int) (boxHeight * DIConfig.guiScale);
             }
             GL11.glScissor(ex, (Minecraft.getMinecraft().displayHeight - boxLocY) - boxHeight, boxWidth, boxHeight);
             drawTargettedMobPreview(el, locX + MobPreviewOffsetX, locY + MobPreviewOffsetY);
@@ -368,8 +368,7 @@ public class DIGuiTools extends GuiIngame {
         int PotionBoxOffsetY = ((Integer) var27.getSkinValue(EnumSkinPart.CONFIGPOTIONBOXY)).intValue();
         try {
             boolean ex = false;
-            DIConfig diConfig = DIConfig.mainInstance();
-            if (diConfig.enablePotionEffects && DIEventBus.potionEffects.get(Integer.valueOf(el.getEntityId())) != null && !DIEventBus.potionEffects.get(Integer.valueOf(el.getEntityId())).isEmpty()) {
+            if (DIEventBus.potionEffects.get(Integer.valueOf(el.getEntityId())) != null && !DIEventBus.potionEffects.get(Integer.valueOf(el.getEntityId())).isEmpty()) {
                 int position = 0;
                 if (DIEventBus.potionEffects.containsKey(Integer.valueOf(el.getEntityId()))) {
                     for (PotionEffect adjy : DIEventBus.potionEffects.get(Integer.valueOf(el.getEntityId()))) {
@@ -380,8 +379,8 @@ public class DIGuiTools extends GuiIngame {
                             GL11.glColor4d(1.0d, 1.0d, 1.0d, 1.0d);
                             if (!ex) {
                                 ex = true;
-                                int adjx1 = diConfig.locX + PotionBoxOffsetX;
-                                int adjy1 = diConfig.locY + PotionBoxOffsetY;
+                                int adjx1 = DIConfig.locX + PotionBoxOffsetX;
+                                int adjy1 = DIConfig.locY + PotionBoxOffsetY;
                                 var27.bindTexture(EnumSkinPart.LEFTPOTIONID);
                                 GL11.glBegin(7);
                                 addVertexWithUV(adjx1, adjy1, 0.0d, 0.0d, 0.0d);
@@ -390,8 +389,8 @@ public class DIGuiTools extends GuiIngame {
                                 addVertexWithUV(adjx1 + PotionBoxSidesWidth, adjy1, 0.0d, 1.0d, 0.0d);
                                 GL11.glEnd();
                             }
-                            int adjx12 = diConfig.locX + PotionBoxOffsetX + (position * 20) + PotionBoxSidesWidth;
-                            int adjy12 = diConfig.locY + PotionBoxOffsetY;
+                            int adjx12 = DIConfig.locX + PotionBoxOffsetX + (position * 20) + PotionBoxSidesWidth;
+                            int adjy12 = DIConfig.locY + PotionBoxOffsetY;
                             var27.bindTexture(EnumSkinPart.CENTERPOTIONID);
                             GL11.glBegin(7);
                             addVertexWithUV(adjx12, adjy12, 0.0d, 0.0d, 0.0d);
@@ -401,15 +400,15 @@ public class DIGuiTools extends GuiIngame {
                             GL11.glEnd();
                             int iconIndex = potion.getStatusIconIndex();
                             String formattedtime = Potion.getPotionDurationString(adjy, 1.0f);
-                            int posx = diConfig.locX + PotionBoxOffsetX + (position * 20) + PotionBoxSidesWidth + 2;
-                            int posy = diConfig.locY + PotionBoxOffsetY + 2;
+                            int posx = DIConfig.locX + PotionBoxOffsetX + (position * 20) + PotionBoxSidesWidth + 2;
+                            int posy = DIConfig.locY + PotionBoxOffsetY + 2;
                             int ioffx = (0 + (iconIndex % 8)) * 18;
                             int ioffy = ((0 + (iconIndex / 8)) * 18) + 198;
                             int width = PotionBoxHeight - 4;
                             inventoryPNG.updateDynamicTexture();
                             instance.drawTexturedModalRect(posx, posy, ioffx, ioffy, width, width);
                             try {
-                                GL11.glTranslatef(((((diConfig.locX + PotionBoxOffsetX) + (position * 20)) + PotionBoxSidesWidth) + 13) - (f2mc.fontRenderer.getStringWidth(formattedtime) / 2), ((diConfig.locY + PotionBoxOffsetY) + PotionBoxHeight) - (f2mc.fontRenderer.FONT_HEIGHT * 0.815f), 0.1f);
+                                GL11.glTranslatef(((((DIConfig.locX + PotionBoxOffsetX) + (position * 20)) + PotionBoxSidesWidth) + 13) - (f2mc.fontRenderer.getStringWidth(formattedtime) / 2), ((DIConfig.locY + PotionBoxOffsetY) + PotionBoxHeight) - (f2mc.fontRenderer.FONT_HEIGHT * 0.815f), 0.1f);
                                 GL11.glScalef(0.815f, 0.815f, 0.815f);
                                 f2mc.fontRenderer.drawStringWithShadow(formattedtime, 0.0f, 0.0f, new Color(1.0f, 1.0f, 0.5f, 1.0f).getRGB());
                                 GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -421,8 +420,8 @@ public class DIGuiTools extends GuiIngame {
                         }
                     }
                     if (ex) {
-                        int var28 = diConfig.locX + PotionBoxOffsetX + (position * 20) + PotionBoxSidesWidth;
-                        int var29 = diConfig.locY + PotionBoxOffsetY;
+                        int var28 = DIConfig.locX + PotionBoxOffsetX + (position * 20) + PotionBoxSidesWidth;
+                        int var29 = DIConfig.locY + PotionBoxOffsetY;
                         var27.bindTexture(EnumSkinPart.RIGHTPOTIONID);
                         GL11.glBegin(7);
                         addVertexWithUV(var28, var29, 0.0d, 0.0d, 0.0d);
@@ -439,7 +438,6 @@ public class DIGuiTools extends GuiIngame {
     }
 
     public static void drawTargettedMobPreview(EntityLivingBase el, int locX, int locY) {
-        DIConfig config = DIConfig.mainInstance();
         Class entityclass = el.getClass();
         EntityConfigurationEntry configentry = Tools.getInstance().getEntityMap().get(entityclass);
         if (configentry == null) {
@@ -462,7 +460,7 @@ public class DIGuiTools extends GuiIngame {
                 finalScale = (configentry.ScaleFactor + (configentry.ScaleFactor * ex)) * configentry.BabyScaleFactor;
             }
             GL11.glScalef(finalScale * 0.85f, finalScale * 0.85f, 0.1f);
-            if (config.lockPosition) {
+            if (DIConfig.lockPosition) {
                 int hurt = el.hurtTime;
                 float ex1 = el.prevRenderYawOffset;
                 el.hurtTime = 0;

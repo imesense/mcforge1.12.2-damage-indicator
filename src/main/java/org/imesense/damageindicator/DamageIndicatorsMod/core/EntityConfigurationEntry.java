@@ -1,7 +1,7 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.core;
 
 import org.imesense.damageindicator.DamageIndicatorMod;
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -19,6 +19,9 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+
+import static org.imesense.damageindicator.DamageIndicatorMod.MOD_CONFIG_DIR;
+
 /* loaded from: input.jar:DamageIndicatorsMod/core/EntityConfigurationEntry.class */
 public class EntityConfigurationEntry {
     public static HashMap<Integer, Integer> maxHealthOverride = new HashMap<>(200);
@@ -173,22 +176,35 @@ public class EntityConfigurationEntry {
     }
 
     public static Configuration getEntityConfiguration() {
-        File configfile = new File(DIConfig.mainInstance().CONFIG_FILE.getParentFile(), "DIAdvancedCompatibility.cfg");
+        File configDir = MOD_CONFIG_DIR;
+        File configfile = new File(configDir, "DIAdvancedCompatibility.cfg");
         try {
-            configfile.createNewFile();
-            return new Configuration(configfile);
+            // Создаем директорию, если не существует
+            configDir.mkdirs();
+
+            // Создаем файл, если не существует
+            if (!configfile.exists()) {
+                configfile.createNewFile();
+            }
+
+            // Загружаем конфигурацию, если файл существует и не пустой
+            Configuration configuration = new Configuration(configfile);
+            if (configfile.exists() && configfile.length() > 0) {
+                configuration.load();
+            }
+            return configuration;
         } catch (Exception e) {
             if (configfile.exists()) {
                 if (!lasttimefailed) {
-                    DamageIndicatorMod.log.warn("Per mob configuration file was corrupt! Attempting to purge and recreate...");
+                    DamageIndicatorMod.logger.warn("Per mob configuration file was corrupt! Attempting to purge and recreate...");
                     if (!configfile.delete()) {
                         configfile.deleteOnExit();
                     }
                     lasttimefailed = true;
                     return getEntityConfiguration();
                 }
-                DamageIndicatorMod.log.warn("Failed to recreate configuration! Configuration should be deleted when minecraft closes.");
-                throw new RuntimeException("DIAdvancedCompatibility was currupt and was unable to recreate the file.");
+                DamageIndicatorMod.logger.warn("Failed to recreate configuration! Configuration should be deleted when minecraft closes.");
+                throw new RuntimeException("DIAdvancedCompatibility was corrupt and was unable to recreate the file.");
             }
             throw new RuntimeException("Exception while creating " + configfile.getAbsolutePath(), e);
         }

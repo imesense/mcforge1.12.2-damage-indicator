@@ -20,7 +20,6 @@ public class CommandDI extends CommandBase {
 
     public void execute(MinecraftServer server, ICommandSender icommandsender, String[] astring) {
         if (icommandsender.getName().toLowerCase().equals("server")) {
-            DIConfig.loadConfig(null);
             for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
                 if (player != null) {
                     ServerEventHandler.sendServerSettings(player);
@@ -28,7 +27,6 @@ public class CommandDI extends CommandBase {
             }
         } else if (FMLCommonHandler.instance().getSide().isClient()) {
             ((EntityPlayer) icommandsender).sendMessage(new TextComponentString("Configuration Reloading"));
-            DIConfig.loadConfig(null);
         }
     }
 }

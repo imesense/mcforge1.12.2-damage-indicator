@@ -46,7 +46,6 @@ public class DIWordParticles extends Particle {
     float yOffset;
     public boolean shouldOnTop;
     FontRenderer fontRenderer;
-    public static DIConfig diConfig = DIConfig.mainInstance();
     public static boolean isOptifinePresent = false;
 
     public DIWordParticles(World par1World, double par2, double par4, double par6, double par8, double par10, double par12) {
@@ -75,20 +74,20 @@ public class DIWordParticles extends Particle {
         this.motionZ = (this.motionZ / var15) * 0.12d;
         this.particleTextureJitterX = 1.5f;
         this.particleTextureJitterY = 1.5f;
-        this.particleGravity = diConfig.Gravity;
-        this.particleScale = diConfig.Size;
-        this.particleMaxAge = diConfig.Lifespan;
+        this.particleGravity = DIConfig.Gravity;
+        this.particleScale = DIConfig.Size;
+        this.particleMaxAge = DIConfig.Lifespan;
         this.particleAge = 0;
         if (this.Damage < 0) {
             this.heal = true;
             this.Damage = Math.abs(this.Damage);
         }
         try {
-            int baseColor = this.heal ? diConfig.healColor : diConfig.DIColor;
+            int baseColor = this.heal ? DIConfig.healColor : DIConfig.DIColor;
             this.red = ((baseColor >> 16) & 255) / 255.0f;
             this.green = ((baseColor >> 8) & 255) / 255.0f;
             this.blue = (baseColor & 255) / 255.0f;
-            this.alpha = diConfig.transparency * 0.9947f;
+            this.alpha = DIConfig.transparency * 0.9947f;
             this.f4ul = ((this.Damage - (MathHelper.floor(this.Damage / 16.0f) * 16.0f)) % 16.0f) / 16.0f;
             this.f5ur = this.f4ul + 0.0624375f;
             this.f6vl = ((MathHelper.floor(this.Damage / 16.0f) * 16.0f) / 16.0f) / 16.0f;
@@ -144,10 +143,10 @@ public class DIWordParticles extends Particle {
         GL11.glEnable(3042);
         GL11.glEnable(3008);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        if (this.criticalhit && DIConfig.mainInstance().showCriticalStrikes) {
+        if (this.criticalhit && DIConfig.showCriticalStrikes) {
             renderText(this.critical, this.fontRenderer.getStringWidth(this.critical) / (-2.0f), this.fontRenderer.FONT_HEIGHT / (-2.0f), 204, 0, 0);
         } else if (!this.criticalhit) {
-            int color = this.heal ? DIConfig.mainInstance().healColor : DIConfig.mainInstance().DIColor;
+            int color = this.heal ? DIConfig.healColor : DIConfig.DIColor;
             renderText(String.valueOf(this.Damage), this.fontRenderer.getStringWidth(this.Damage + "") / (-2.0f), this.fontRenderer.FONT_HEIGHT / (-2.0f), (color >> 16) & 255, (color >> 8) & 255, (color >> 0) & 255);
         }
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -155,7 +154,7 @@ public class DIWordParticles extends Particle {
         GL11.glPopMatrix();
         if (this.grow) {
             this.particleScale *= 1.08f;
-            if (this.particleScale > diConfig.Size * 3.0d) {
+            if (this.particleScale > DIConfig.Size * 3.0d) {
                 this.grow = false;
                 return;
             }
@@ -165,7 +164,7 @@ public class DIWordParticles extends Particle {
     }
 
     public void renderText(String str, float posX, float posY, int red, int green, int blue) {
-        if (DIConfig.mainInstance().useDropShadows) {
+        if (DIConfig.useDropShadows) {
             int r = red;
             int g = green;
             int b = blue;

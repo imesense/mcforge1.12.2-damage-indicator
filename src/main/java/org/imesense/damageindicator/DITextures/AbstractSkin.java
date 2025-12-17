@@ -61,7 +61,7 @@ public abstract class AbstractSkin {
     }
 
     public static AbstractSkin getActiveSkin() {
-        return setSkin(DIConfig.mainInstance().selectedSkin);
+        return setSkin(DIConfig.selectedSkin);
     }
 
     public static String getAuthor(String internalName) {
@@ -89,10 +89,9 @@ public abstract class AbstractSkin {
             skin.loadSkin();
             SKINS.put(s, skin);
         }
-        if (!AVAILABLESKINS.contains(DIConfig.mainInstance().selectedSkin)) {
-            DIConfig.mainInstance().selectedSkin = "/assets/defaultskins/default/";
-            DIConfig.overrideConfigAndSave(DIConfig.mainInstance());
-            setSkin(DIConfig.mainInstance().selectedSkin);
+        if (!AVAILABLESKINS.contains(DIConfig.selectedSkin)) {
+            DIConfig.selectedSkin = "/assets/defaultskins/default/";
+            setSkin(DIConfig.selectedSkin);
         }
         releaseCurrentTextures();
         getActiveSkin().loadSkin();

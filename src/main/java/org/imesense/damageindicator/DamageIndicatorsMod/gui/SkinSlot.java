@@ -50,14 +50,14 @@ public class SkinSlot {
         this(Minecraft.getMinecraft(), par1GuiTexturePacks.width - 128, par1GuiTexturePacks.height - 128, 64, par1GuiTexturePacks.height - 64, 64, 32);
         this.parentTexturePackGui = par1GuiTexturePacks;
         this.selectedEntry = 0;
-        if (DIConfig.mainInstance().portraitEnabled) {
-            this.selectedEntry = AbstractSkin.AVAILABLESKINS.indexOf(DIConfig.mainInstance().selectedSkin);
+        if (DIConfig.portraitEnabled) {
+            this.selectedEntry = AbstractSkin.AVAILABLESKINS.indexOf(DIConfig.selectedSkin);
         }
     }
 
     protected void elementClicked(int par1, boolean par2) {
-        DIConfig.mainInstance().selectedSkin = AbstractSkin.AVAILABLESKINS.get(par1);
-        AbstractSkin.setSkin(DIConfig.mainInstance().selectedSkin);
+        DIConfig.selectedSkin = AbstractSkin.AVAILABLESKINS.get(par1);
+        AbstractSkin.setSkin(DIConfig.selectedSkin);
         if (par2) {
             Minecraft.getMinecraft().displayGuiScreen(this.parentTexturePackGui);
         }
@@ -97,7 +97,7 @@ public class SkinSlot {
         this.boxWidth = MathHelper.floor(width * scaledresolution.getScaleFactor());
         this.boxHeight = MathHelper.floor(height * scaledresolution.getScaleFactor());
         this.boxLocY = MathHelper.floor(top * scaledresolution.getScaleFactor());
-        this.selectedEntry = AbstractSkin.AVAILABLESKINS.indexOf(DIConfig.mainInstance().selectedSkin);
+        this.selectedEntry = AbstractSkin.AVAILABLESKINS.indexOf(DIConfig.selectedSkin);
     }
 
     public void setShowSelectionBox(boolean par1) {

@@ -28,8 +28,8 @@ public class ServerEventHandler {
 
     public static void sendServerSettings(EntityPlayer player) {
         if (player instanceof EntityPlayerMP) {
-            byte toggles = (byte) (0 + (!DIConfig.mainInstance().portraitEnabled ? 2 : 0));
-            DamageIndicatorMod.network.sendTo(new DIPermissions((byte) (((byte) (toggles + (!DIConfig.mainInstance().enablePotionEffects ? (byte) 4 : (byte) 0))) + (!DIConfig.mainInstance().popOffsEnabled ? (byte) 8 : (byte) 0))), (EntityPlayerMP) player);
+            byte toggles = (byte) (0 + (!DIConfig.portraitEnabled ? 2 : 0));
+            DamageIndicatorMod.network.sendTo(new DIPermissions((byte) (((byte) (toggles + (!DIConfig.enablePotionEffects ? (byte) 4 : (byte) 0))) + (!DIConfig.popOffsEnabled ? (byte) 8 : (byte) 0))), (EntityPlayerMP) player);
         }
     }
 
@@ -44,8 +44,8 @@ public class ServerEventHandler {
     public void livingEvent(LivingEvent.LivingUpdateEvent evt) {
         Collection<?> potionEffects;
         EntityLivingBase el = evt.getEntityLiving();
-        if (DIConfig.mainInstance().enablePotionEffects && evt.getEntityLiving() != null && (potionEffects = el.getActivePotionEffects()) != null && !potionEffects.isEmpty()) {
-            int offset = MathHelper.floor(DIConfig.mainInstance().packetrange / 2.0f);
+        if (DIConfig.enablePotionEffects && evt.getEntityLiving() != null && (potionEffects = el.getActivePotionEffects()) != null && !potionEffects.isEmpty()) {
+            int offset = MathHelper.floor(DIConfig.packetrange / 2.0f);
             AxisAlignedBB aabb = new AxisAlignedBB(el.posX - offset, el.posY - offset, el.posZ - offset, el.posX + offset, el.posY + offset, el.posZ + offset);
             List<EntityPlayer> players = el.world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
             if (players != null && !players.isEmpty()) {

@@ -10,37 +10,37 @@ import net.minecraftforge.common.config.Property;
 public class DIConfig {
     public final File CONFIG_FILE;
     private static DIConfig diConfig;
-    public float Size = 3.0f;
-    public float Gravity = 0.8f;
-    public float BounceStrength = 1.5f;
-    public float ScaleFilter = 0.0f;
-    public float transparency = 1.0f;
-    public float guiScale = 0.76f;
-    public int DIColor = 16755200;
-    public int Lifespan = 12;
-    public boolean CustomFont = true;
-    public int packetrange = 30;
-    public boolean alwaysRender = false;
-    public boolean portraitEnabled = true;
-    public boolean popOffsEnabled = true;
-    public boolean enablePotionEffects = true;
-    public int mouseoverRange = 30;
-    public int healColor = 65280;
-    public int portraitLifetime = 160;
-    public int locX = 15;
-    public int locY = 15;
-    public boolean lockPosition = true;
-    private String formattedDIColor = "FFAA00";
-    private String formattedHealColor = "00FF00";
-    public byte checkForUpdates = 2;
-    public boolean DebugHidesWindow = true;
-    public String selectedSkin = "/assets/defaultskins/default/";
-    public boolean alternateRenderingMethod = false;
-    public boolean highCompatibilityMod = false;
-    public boolean supressBossUI = false;
-    public boolean showCriticalStrikes = true;
-    public boolean useDropShadows = true;
-    public RenderingHints hints = populateHints();
+    public static float Size = 3.0f;
+    public static float Gravity = 0.8f;
+    public static float BounceStrength = 1.5f;
+    public static float ScaleFilter = 0.0f;
+    public static float transparency = 1.0f;
+    public static float guiScale = 1.0f;
+    public static int DIColor = 16755200;
+    public static int Lifespan = 12;
+    public static boolean CustomFont = true;
+    public static int packetrange = 30;
+    public static boolean alwaysRender = false;
+    public static boolean portraitEnabled = true;
+    public static boolean popOffsEnabled = true;
+    public static boolean enablePotionEffects = true;
+    public static int mouseoverRange = 30;
+    public static int healColor = 65280;
+    public static int portraitLifetime = 160;
+    public static int locX = 15;
+    public static int locY = 15;
+    public static boolean lockPosition = true;
+    private static String formattedDIColor = "FFAA00";
+    private static String formattedHealColor = "00FF00";
+    public static byte checkForUpdates = 2;
+    public static boolean DebugHidesWindow = true;
+    public static String selectedSkin = "/assets/defaultskins/default/";
+    public static boolean alternateRenderingMethod = false;
+    public static boolean highCompatibilityMod = false;
+    public static boolean supressBossUI = false;
+    public static boolean showCriticalStrikes = true;
+    public static boolean useDropShadows = true;
+    public static RenderingHints hints = populateHints();
 
     private DIConfig(File file, int check) {
         this.CONFIG_FILE = file;
@@ -234,7 +234,7 @@ public class DIConfig {
         }
     }
 
-    private RenderingHints populateHints() {
+    private static RenderingHints populateHints() {
         Map hintsMap = new HashMap();
         hintsMap.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         hintsMap.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);

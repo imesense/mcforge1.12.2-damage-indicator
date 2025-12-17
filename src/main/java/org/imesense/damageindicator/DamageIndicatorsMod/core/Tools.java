@@ -42,9 +42,9 @@ public class Tools {
     }
 
     public BufferedImage doFilter(BufferedImage src) throws OutOfMemoryError, Throwable {
-        int upScaleDim = MathHelper.floor(src.getWidth() * DIConfig.mainInstance().ScaleFilter);
+        int upScaleDim = MathHelper.floor(src.getWidth() * DIConfig.ScaleFilter);
         BufferedImage dst = new BufferedImage(upScaleDim, upScaleDim, src.getType());
-        AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(DIConfig.mainInstance().ScaleFilter, DIConfig.mainInstance().ScaleFilter), DIConfig.mainInstance().hints);
+        AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(DIConfig.ScaleFilter, DIConfig.ScaleFilter), DIConfig.hints);
         ato.filter(src, dst);
         return dst;
     }

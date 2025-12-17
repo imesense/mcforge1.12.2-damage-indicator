@@ -1,8 +1,10 @@
 package org.imesense.damageindicator;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.resources.I18n;
@@ -19,7 +21,6 @@ import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
 import org.imesense.damageindicator.DamageIndicatorsMod.core.DIPermissions;
 import org.imesense.damageindicator.DamageIndicatorsMod.core.DIPotionEffects;
 import org.imesense.damageindicator.DamageIndicatorsMod.server.CommandDI;
@@ -45,12 +46,13 @@ import org.imesense.damageindicator.DamageIndicatorsMod.server.DIProxy;
     modid = DamageIndicatorMod.MOD_ID,
     name = DamageIndicatorMod.NAME,
     version = DamageIndicatorMod.VERSION,
-    dependencies = "required-after:fermiumbooter",
     acceptableRemoteVersions = "*",
     acceptedMinecraftVersions = "[1.12.2]"
 )
 public final class DamageIndicatorMod
 {
+    public static File MOD_CONFIG_DIR;
+
     /**
      * Modification unique identifier
      */
@@ -66,7 +68,6 @@ public final class DamageIndicatorMod
      */
     public static final String VERSION = "1.12.2-14.23.5.2864";
 
-    public static Logger log;
     @Mod.Instance("damageindicator")
     public static DamageIndicatorMod instance;
     @SidedProxy(
@@ -83,13 +84,21 @@ public final class DamageIndicatorMod
     public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel("DIMod");
 
     /**
+     * Logger instance for {@link DamageIndicatorMod}
+     *
+     * @see Logger
+     * @see LogManager
+     */
+    public static Logger logger = LogManager.getLogger(DamageIndicatorMod.class);
+
+    /**
      * Logs a method call to the logger.
      *
      * @param methodName the name of the method being called
      */
     private void logMethodCall(String methodName)
     {
-        log.info(
+        logger.info(
             "Called {}.{} method",
             this.getClass().getName(),
             methodName
@@ -108,6 +117,8 @@ public final class DamageIndicatorMod
     @SideOnly(Side.CLIENT)
     static void setLocaleMetadata(FMLPreInitializationEvent event)
     {
+        MOD_CONFIG_DIR = event.getModConfigurationDirectory();
+
         ModMetadata metadata = event.getModMetadata();
         metadata.name = I18n.format("mod." + MOD_ID + ".name");
         metadata.description = I18n.format("mod." + MOD_ID + ".description");
@@ -130,29 +141,28 @@ public final class DamageIndicatorMod
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        log = event.getModLog();
+        logMethodCall(new Object(){}.getClass().getEnclosingMethod().getName());
+
+        // Сначала регистрируем сетевые сообщения на ВСЕХ сторонах
+        logger = event.getModLog();
         try {
-            DIConfig.loadConfig(event.getSuggestedConfigurationFile());
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-            if (!event.getSuggestedConfigurationFile().delete()) {
-                event.getSuggestedConfigurationFile().deleteOnExit();
-            }
-            DIConfig.loadConfig(event.getSuggestedConfigurationFile());
-        }
-        try {
-            network.registerMessage(DIPermissions.Handler.class, DIPermissions.class, this.packetID, Side.SERVER);
-            SimpleNetworkWrapper simpleNetworkWrapper = network;
-            int i = this.packetID;
-            this.packetID = i + 1;
-            simpleNetworkWrapper.registerMessage(DIPermissions.Handler.class, DIPermissions.class, i, Side.CLIENT);
-            network.registerMessage(DIPotionEffects.Handler.class, DIPotionEffects.class, this.packetID, Side.SERVER);
-            SimpleNetworkWrapper simpleNetworkWrapper2 = network;
-            int i2 = this.packetID;
-            this.packetID = i2 + 1;
-            simpleNetworkWrapper2.registerMessage(DIPotionEffects.Handler.class, DIPotionEffects.class, i2, Side.CLIENT);
+            // Регистрируем с уникальными ID
+            // ID 0: DIPermissions от клиента к серверу
+            network.registerMessage(DIPermissions.Handler.class, DIPermissions.class, 0, Side.SERVER);
+
+            // ID 1: DIPotionEffects от сервера к клиенту
+            network.registerMessage(DIPotionEffects.Handler.class, DIPotionEffects.class, 1, Side.CLIENT);
+
+            logger.info("Registered network messages with IDs 0 and 1 on side: {}", event.getSide());
         } catch (Throwable ex2) {
+            logger.error("Failed to register network messages", ex2);
             ex2.printStackTrace();
+        }
+
+        // Только клиентский код (локализация и миксины)
+        if (event.getSide().isClient())
+        {
+            setLocaleMetadata(event);
         }
     }
 
@@ -172,6 +182,8 @@ public final class DamageIndicatorMod
                 .getEnclosingMethod()
                 .getName()
         );
+
+        proxy.register();
     }
 
     /**
@@ -190,15 +202,6 @@ public final class DamageIndicatorMod
                 .getEnclosingMethod()
                 .getName()
         );
-    }
-
-    @EventHandler
-    public void load(FMLInitializationEvent event) {
-        proxy.register();
-    }
-
-    @EventHandler
-    public void load(FMLPostInitializationEvent event) {
     }
 
     /**
