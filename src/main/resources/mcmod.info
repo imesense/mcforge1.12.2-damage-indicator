@@ -1,9 +1,9 @@
 [
     {
-        "modid": "emptymod",
-        "name": "Empty Mod",
+        "modid": "damageindicator",
+        "name": "Damage Indicator",
         "description": "Description placeholder",
-        "version": "0.2",
+        "version": "0.1",
         "url": "",
         "updateUrl": "",
         "authorList": [

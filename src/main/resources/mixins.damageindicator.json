@@ -1,7 +1,7 @@
 {
     "required": true,
-    "package": "org.imesense.emptymod.mixin",
-    "refmap": "mixins.emptymod.refmap.json",
+    "package": "org.imesense.damageindicator.mixin",
+    "refmap": "mixins.damageindicator.refmap.json",
     "compatibilityLevel": "JAVA_8",
     "target": "@env(DEFAULT)",
     "minVersion": "0.8",

@@ -1,4 +1,4 @@
-package org.imesense.emptymod.plugin;
+package org.imesense.damageindicator.plugin;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import org.spongepowered.asm.launch.MixinBootstrap;
 import fermiumbooter.FermiumRegistryAPI;
 
 /**
- * Core loading plugin for the EmptyMod that handles early initialization of Mixin framework.
+ * Core loading plugin for the DamageIndicator that handles early initialization of Mixin framework.
  * <p>
  * Implements {@link IFMLLoadingPlugin} to integrate with Forge's mod loading system.
  *
@@ -77,7 +77,7 @@ public final class LoadingPlugin implements IFMLLoadingPlugin
             logger.debug("Initializing Mixin");
 
             MixinBootstrap.init();
-            FermiumRegistryAPI.enqueueMixin(false, "mixins.emptymod.json");
+            FermiumRegistryAPI.enqueueMixin(false, "mixins.damageindicator.json");
 
             logger.info("Mixin initialization complete");
         }

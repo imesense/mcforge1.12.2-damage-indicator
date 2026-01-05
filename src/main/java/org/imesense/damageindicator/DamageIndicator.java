@@ -1,4 +1,4 @@
-package org.imesense.emptymod;
+package org.imesense.damageindicator;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Main class for EmptyMod modification
+ * Main class for Damage Indicator modification
  * <p>
  * This class serves as the primary entry point for the mod and handles all major
  * lifecycle events in the Forge mod loading process. It includes functionality for:
@@ -39,22 +39,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @see Mod
  */
 @Mod(
-    modid = EmptyMod.MOD_ID,
-    name = EmptyMod.NAME,
-    version = EmptyMod.VERSION,
+    modid = DamageIndicator.MOD_ID,
+    name = DamageIndicator.NAME,
+    version = DamageIndicator.VERSION,
     dependencies = "required-after:fermiumbooter"
 )
-public final class EmptyMod
+public final class DamageIndicator
 {
     /**
      * Modification unique identifier
      */
-    public static final String MOD_ID = "emptymod";
+    public static final String MOD_ID = "damageindicator";
 
     /**
      * Modification name
      */
-    public static final String NAME = "Empty Mod";
+    public static final String NAME = "Damage Indicator";
 
     /**
      * Minecraft version
@@ -62,12 +62,12 @@ public final class EmptyMod
     public static final String VERSION = "1.12.2-14.23.5.2864";
 
     /**
-     * Logger instance for {@link EmptyMod}
+     * Logger instance for {@link DamageIndicator}
      *
      * @see Logger
      * @see LogManager
      */
-    static Logger logger = LogManager.getLogger(EmptyMod.class);
+    static Logger logger = LogManager.getLogger(DamageIndicator.class);
 
     /**
      * Logs a method call to the logger.

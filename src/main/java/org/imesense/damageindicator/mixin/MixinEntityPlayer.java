@@ -1,4 +1,4 @@
-package org.imesense.emptymod.mixin;
+package org.imesense.damageindicator.mixin;
 
 import net.minecraft.entity.player.EntityPlayer;
 

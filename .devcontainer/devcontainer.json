@@ -1,9 +1,9 @@
 {
     "$schema": "https://raw.githubusercontent.com/devcontainers/spec/926880e9c768493eec415224f35146bdfcd63904/schemas/devContainer.schema.json",
 
-    "name": "Empty Mod",
+    "name": "Damage Indicator",
     "dockerComposeFile": "docker-compose.yaml",
-    "service": "emptymod-devcontainer",
+    "service": "damage-indicator-devcontainer",
     "remoteUser": "minecraft",
     "workspaceFolder": "/src",
     "shutdownAction": "stopCompose",

@@ -30,9 +30,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 // File metadata
-version = '1.12.2-0.2'
+version = '1.12.2-0.1'
 group = 'org.imesense'
-archivesBaseName = 'EmptyMod'
+archivesBaseName = 'DamageIndicator'
 
 // Java version
 sourceCompatibility =
@@ -61,7 +61,7 @@ minecraft {
         client {
             args "--username=InDev"
 
-            jvmArg "-Dfml.coreMods.load=org.imesense.emptymod.plugin.LoadingPlugin"
+            jvmArg "-Dfml.coreMods.load=org.imesense.damageindicator.plugin.LoadingPlugin"
             jvmArg "-Dmixin.hotSwap=true"
             jvmArg "-Dmixin.checks.interfaces=true"
 
@@ -75,7 +75,7 @@ minecraft {
         }
 
         server {
-            jvmArg "-Dfml.coreMods.load=org.imesense.emptymod.plugin.LoadingPlugin"
+            jvmArg "-Dfml.coreMods.load=org.imesense.damageindicator.plugin.LoadingPlugin"
             jvmArg "-Dmixin.hotSwap=true"
             jvmArg "-Dmixin.checks.interfaces=true"
 
@@ -91,7 +91,7 @@ minecraft {
 }
 
 mixin {
-    add sourceSets.main, 'mixins.emptymod.refmap.json'
+    add sourceSets.main, 'mixins.damageindicator.refmap.json'
 }
 
 dependencies {
@@ -150,7 +150,7 @@ test {
 jar {
     manifest {
         attributes([
-            "Specification-Title": "emptymod",
+            "Specification-Title": "damageindicator",
             "Specification-Vendor": "imesense",
             "Specification-Version": "1",
             "Implementation-Title": project.name,
@@ -158,7 +158,7 @@ jar {
             "Implementation-Vendor" :"imesense",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
             "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
-            "FMLCorePlugin": "org.imesense.emptymod.plugin.LoadingPlugin",
+            "FMLCorePlugin": "org.imesense.damageindicator.plugin.LoadingPlugin",
             "FMLCorePluginContainsFMLMod": "true",
             "ForceLoadAsMod": "true"
         ])
@@ -190,7 +190,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             // Redefine output name
-            artifactId = "emptymod"
+            artifactId = "damageindicator"
 
             artifact jar
             artifact sourcesJar

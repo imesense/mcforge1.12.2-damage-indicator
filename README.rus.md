@@ -4,11 +4,11 @@
 
 [![Language](https://img.shields.io/badge/Language-Java-orange.svg)](https://www.java.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE.txt)
-[![Release](https://img.shields.io/github/v/release/imesense/mcforge1.12.2-empty-mod?include_prereleases&label=Release)](https://github.com/imesense/mcforge1.12.2-empty-mod/releases/latest)
-[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/imesense/mcforge1.12.2-empty-mod)
-[![Build client](https://github.com/imesense/mcforge1.12.2-empty-mod/actions/workflows/build-client.yml/badge.svg)](https://github.com/imesense/mcforge1.12.2-empty-mod/actions/workflows/build-client.yml)
-[![Build server](https://github.com/imesense/mcforge1.12.2-empty-mod/actions/workflows/build-server.yml/badge.svg)](https://github.com/imesense/mcforge1.12.2-empty-mod/actions/workflows/build-server.yml)
-[![Build devcontainers](https://github.com/imesense/mcforge1.12.2-empty-mod/actions/workflows/build-devcontainers.yml/badge.svg)](https://github.com/imesense/mcforge1.12.2-empty-mod/actions/workflows/build-devcontainers.yml)
+[![Release](https://img.shields.io/github/v/release/imesense/mcforge1.12.2-damage-indicator?include_prereleases&label=Release)](https://github.com/imesense/mcforge1.12.2-damage-indicator/releases/latest)
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/imesense/mcforge1.12.2-damage-indicator)
+[![Build client](https://github.com/imesense/mcforge1.12.2-damage-indicator/actions/workflows/build-client.yml/badge.svg)](https://github.com/imesense/mcforge1.12.2-damage-indicator/actions/workflows/build-client.yml)
+[![Build server](https://github.com/imesense/mcforge1.12.2-damage-indicator/actions/workflows/build-server.yml/badge.svg)](https://github.com/imesense/mcforge1.12.2-damage-indicator/actions/workflows/build-server.yml)
+[![Build devcontainers](https://github.com/imesense/mcforge1.12.2-damage-indicator/actions/workflows/build-devcontainers.yml/badge.svg)](https://github.com/imesense/mcforge1.12.2-damage-indicator/actions/workflows/build-devcontainers.yml)
 
 Пустой мод для Minecraft 1.12.2 с поддержкой миксин.
 
@@ -37,11 +37,9 @@
 
 - Собрать образ сервера:
 
-  <!-- markdownlint-disable MD013 -->
   ```sh
-  docker build --file docker/Server/Dockerfile --progress=plain --target final --tag mcforge1.12.2-empty-mod:latest .
+  docker build --file docker/Server/Dockerfile --progress=plain --target final --tag mcforge1.12.2-damage-indicator:latest .
   ```
-  <!-- markdownlint-enable MD013 -->
 
   Или запустить скрипт сборки из папки `docker/Server/` в корне репозитория.
 

@@ -10,7 +10,7 @@ if "%~1"=="" (
 set ProjectVersion=%~1
 
 :: Set variables
-set ProjectName=mcforge1.12.2-empty-mod
+set ProjectName=mcforge1.12.2-damage-indicator
 set ProjectTag=%ProjectName%-server
 set ProjectOutputImage=%ProjectName%-%ProjectVersion%-server-image.tar
 
