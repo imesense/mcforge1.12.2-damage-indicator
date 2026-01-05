@@ -1,0 +1,55 @@
+{
+    "folders": [
+        {
+            "name": "Empty Mod",
+            "path": "."
+        }
+    ],
+
+    "settings": {
+        "files.associations": {
+            "*.code-workspace": "jsonc",
+            ".vscode/*.json": "jsonc",
+
+            "gradlew": "shellscript",
+
+            "*.properties*": "properties",
+
+            "*.info": "json",
+            "*.mcmeta": "json",
+            "*.lang": "properties",
+
+            "*.env*": "properties"
+        },
+
+        "redhat.telemetry.enabled": false,
+
+        "[yaml]": {
+            "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        "[json]": {
+            "editor.defaultFormatter": "vscode.json-language-features"
+        },
+        "[markdown]": {
+            "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+        }
+    },
+
+    "extensions": {
+        "recommendations": [
+            "redhat.vscode-yaml",
+
+            "EditorConfig.EditorConfig",
+            "DavidAnson.vscode-markdownlint",
+
+            "ms-azuretools.vscode-docker",
+            "docker.docker",
+            "ms-vscode-remote.remote-containers",
+            "GitHub.vscode-github-actions"
+        ],
+
+        "unwantedRecommendations": [
+            "vscjava.vscode-java-pack"
+        ]
+    }
+}

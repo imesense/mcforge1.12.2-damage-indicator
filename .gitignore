@@ -1,0 +1,37 @@
+# Global ignoring of different binaries and another temporary files
+
+# System cache
+.DS_Store
+Thumbs.db
+
+# Gradle cache and settings
+.gradle/
+build/
+run/
+
+# Java cache
+libs/
+
+# IntelliJ Idea cache and settings
+.idea/
+out/
+*.ipr
+*.iws
+*.iml
+
+# Visual Studio Code files
+.vscode/launch.json
+
+# Minecraft cache and settings
+mcmodsrepo/
+mods/
+config/
+world/
+crash-reports/
+server.properties
+
+# Configs
+*.env
+
+# Logs
+logs/

@@ -1,0 +1,50 @@
+# Global ignoring of different binaries and another temporary files
+
+# Git files and folders
+.git/
+*.gitattributes
+*.gitignore
+
+# Docker files
+docker/
+!docker/**/*.sh
+*.dockerignore
+
+# Environment configs
+*.env*
+
+# GitHub files and folders
+.github/
+
+# Java cache
+libs/
+
+# IntelliJ Idea cache and settings
+.idea/
+out/
+*.ipr
+*.iws
+*.iml
+
+# Visual Studio Code files
+.vscode/
+*.code-workspace
+
+# Gradle cache and settings
+.gradle/
+build/
+run/
+
+# Common logs
+logs/
+
+# Minecraft files
+mcmodsrepo/
+mods/
+config/
+world/
+crash-reports/
+
+# System cache
+.DS_Store
+Thumbs.db

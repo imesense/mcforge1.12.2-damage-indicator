@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: "Build client"
+
+on:
+    push:
+        branches:
+            - "**"
+        paths:
+            - ".github/workflows/**"
+            - "gradle/**"
+            - "src/**"
+            - "*.gradle"
+            - "gradle*"
+
+    pull_request:
+        branches:
+            - "**"
+        paths:
+            - ".github/workflows/**"
+            - "gradle/**"
+            - "src/**"
+            - "*.gradle"
+            - "gradle*"
+
+defaults:
+    run:
+        shell: pwsh
+
+jobs:
+    build-modification:
+        name: "Build modification"
+
+        strategy:
+            matrix:
+                system:
+                    - windows-2022
+                    - ubuntu-24.04
+
+        runs-on: ${{ matrix.system }}
+
+        env:
+            GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Setup JDK
+              uses: actions/setup-java@v5
+              with:
+                  java-version: "8"
+                  distribution: "temurin"
+
+            - name: Cache dependencies
+              uses: actions/cache@v5
+              with:
+                  key: Modification-${{ hashFiles('**/build.gradle') }}
+                  restore-keys: |
+                      Modification-${{ hashFiles('**/build.gradle') }}
+                      Modification-
+                  path: |
+                      .gradle/caches/
+                      .gradle/wrapper/
+                  enableCrossOsArchive: true
+
+            - name: Build modification (Windows)
+              if: ${{ runner.os == 'Windows' }}
+              run: |
+                  ${{ github.workspace }}\gradlew.bat build
+
+            - name: Build modification (Linux)
+              if: ${{ runner.os == 'Linux' }}
+              run: |
+                  ${{ github.workspace }}/gradlew build
+
+            - name: Upload modification
+              uses: actions/upload-artifact@v6
+              with:
+                  name: ${{ github.event.repository.name }}-build-${{ github.sha }}
+                  path: |
+                      ${{ github.workspace }}/build/libs/
+                  overwrite: true
+
+            - name: Upload cache
+              uses: actions/upload-artifact@v6
+              with:
+                  name: ${{ github.event.repository.name }}-cache-${{ matrix.system }}-${{ github.sha }}
+                  path: |
+                      ${{ github.workspace }}/.gradle/caches/
+                      ${{ github.workspace }}/.gradle/wrapper/
+                      ${{ github.workspace }}/libs/
+                  overwrite: true
+
+    publish-modification:
+        name: "Publish modification"
+
+        needs:
+            - build-modification
+
+        strategy:
+            matrix:
+                system:
+                    - ubuntu-24.04
+
+        runs-on: ${{ matrix.system }}
+
+        env:
+            GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Setup JDK
+              uses: actions/setup-java@v5
+              with:
+                  java-version: "8"
+                  distribution: "temurin"
+
+            - name: Cache dependencies
+              uses: actions/cache@v5
+              with:
+                  key: Modification-${{ hashFiles('**/build.gradle') }}
+                  restore-keys: |
+                      Modification-${{ hashFiles('**/build.gradle') }}
+                      Modification-
+                  path: |
+                      .gradle/caches/
+                      .gradle/wrapper/
+                      libs/
+                  enableCrossOsArchive: true
+
+            - name: Publish modification
+              run: |
+                  ${{ github.workspace }}/gradlew publish
+
+            - name: Upload modification
+              uses: actions/upload-artifact@v6
+              with:
+                  name: ${{ github.event.repository.name }}-publish-${{ github.sha }}
+                  path: |
+                      ${{ github.workspace }}/build/libs/
+                  overwrite: true
+
+            - name: Upload repository
+              uses: actions/upload-artifact@v6
+              with:
+                  name: ${{ github.event.repository.name }}-repository-${{ github.sha }}
+                  path: |
+                      ${{ github.workspace }}/mcmodsrepo/

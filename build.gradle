@@ -1,0 +1,245 @@
+buildscript {
+    repositories {
+        maven {
+            url = 'https://maven.minecraftforge.net/'
+        }
+        maven {
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    maven {
+        url "https://cursemaven.com"
+    }
+}
+
+apply plugin: 'maven-publish'
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+// File metadata
+version = '1.12.2-0.2'
+group = 'org.imesense'
+archivesBaseName = 'EmptyMod'
+
+// Java version
+sourceCompatibility =
+targetCompatibility =
+    '1.8'
+
+// Compile options
+compileJava {
+    sourceCompatibility =
+    targetCompatibility =
+        '1.8'
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    // Mappings settings of Minecraft
+    mappings channel: 'stable', version: '39-1.12'
+
+    // Uncomment this to disable `Srg` named sources JAR by default
+    //makeObfSourceJar = false
+
+    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    // Default run configurations
+    runs {
+        client {
+            args "--username=InDev"
+
+            jvmArg "-Dfml.coreMods.load=org.imesense.emptymod.plugin.LoadingPlugin"
+            jvmArg "-Dmixin.hotSwap=true"
+            jvmArg "-Dmixin.checks.interfaces=true"
+
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        server {
+            jvmArg "-Dfml.coreMods.load=org.imesense.emptymod.plugin.LoadingPlugin"
+            jvmArg "-Dmixin.hotSwap=true"
+            jvmArg "-Dmixin.checks.interfaces=true"
+
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, 'mixins.emptymod.refmap.json'
+}
+
+dependencies {
+    // Specify the version of Minecraft to use
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2864'
+
+    // Optional dependencies that exist at compile-time but might not at runtime
+    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // Dependencies to get remapped to current MCP mappings
+    //deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // Mixins
+    implementation 'org.spongepowered:mixin:0.8.5'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation "io.github.llamalad7:mixinextras-common:0.3.6"
+    annotationProcessor "io.github.llamalad7:mixinextras-common:0.3.6"
+    implementation fg.deobf("curse.maven:fermiumbooter-968474:6386622")
+
+    // Lombok
+    //compileOnly 'org.projectlombok:lombok:1.18.30'
+    //annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    // Byte Buddy
+    //implementation 'net.bytebuddy:byte-buddy:1.12.9'
+
+    // DivineRPG
+    //implementation fg.deobf("curse.maven:official-divinerpg-363543:2937175")
+
+    // Asm
+    testImplementation 'org.ow2.asm:asm:9.4'
+    testImplementation 'org.ow2.asm:asm-tree:9.4'
+
+    // JUnit
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
+    testImplementation 'org.mockito:mockito-inline:4.11.0'
+
+    // Mixins
+    testImplementation 'org.spongepowered:mixin:0.8.5'
+}
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+// Get properties into the manifest for reading by the runtime
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "emptymod",
+            "Specification-Vendor": "imesense",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"imesense",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "FMLCorePlugin": "org.imesense.emptymod.plugin.LoadingPlugin",
+            "FMLCorePluginContainsFMLMod": "true",
+            "ForceLoadAsMod": "true"
+        ])
+    }
+}
+
+// Preferred method to reobfuscate JAR file
+jar.finalizedBy('reobfJar')
+
+// Build sources task
+tasks.register('sourcesJar', Jar) {
+    from sourceSets.main.allJava
+    from sourceSets.main.resources
+    classifier = 'sources'
+}
+
+// Build documentation task
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    from "$buildDir/docs/javadoc"
+    classifier = 'javadoc'
+}
+
+// Delay the obfuscation
+//publish.dependsOn('reobfJar')
+
+// Set publish settings
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            // Redefine output name
+            artifactId = "emptymod"
+
+            artifact jar
+            artifact sourcesJar
+            artifact javadocJar
+
+            // Add dependencies to manifest
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.runtimeClasspath.allDependencies.each { dep ->
+                    if (dep.group != null && dep.name != null) {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dep.group)
+                        dependencyNode.appendNode('artifactId', dep.name)
+                        dependencyNode.appendNode('version', dep.version)
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+// Enable packaging of metadata and resources
+sourceSets {
+    main {
+        output.resourcesDir = output.classesDir
+    }
+}
+
+// Enable annotations for mixins
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+    options.compilerArgs += [
+        "-AdefaultObfuscationEnv=searge"
+    ]
+}
+
+tasks.register('copyDependencies', Copy) {
+    from configurations.runtimeClasspath.filter {
+        file ->
+            file.name.contains('fermiumbooter')
+    }
+    into 'build/libs'
+}
+
+jar.dependsOn copyDependencies
+build.dependsOn copyDependencies

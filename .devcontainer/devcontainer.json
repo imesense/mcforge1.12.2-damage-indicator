@@ -1,0 +1,71 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/926880e9c768493eec415224f35146bdfcd63904/schemas/devContainer.schema.json",
+
+    "name": "Empty Mod",
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "emptymod-devcontainer",
+    "remoteUser": "minecraft",
+    "workspaceFolder": "/src",
+    "shutdownAction": "stopCompose",
+
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1.0.15": {}
+    },
+
+    "customizations": {
+        "codespaces": {
+            "openFiles": [
+                "README.md"
+            ]
+        },
+
+        "vscode": {
+            "extensions": [
+                "redhat.vscode-yaml",
+
+                "EditorConfig.EditorConfig",
+                "DavidAnson.vscode-markdownlint",
+
+                "ms-azuretools.vscode-docker",
+                "docker.docker",
+                "ms-vscode-remote.remote-containers",
+                "GitHub.vscode-github-actions"
+            ],
+
+            "settings": {
+                "files.associations": {
+                    "*.code-workspace": "jsonc",
+                    ".vscode/*.json": "jsonc",
+
+                    "gradlew": "shellscript",
+
+                    "*.properties*": "properties",
+
+                    "*.info": "json",
+                    "*.mcmeta": "json",
+                    "*.lang": "properties",
+
+                    "*.env*": "properties"
+                },
+
+                "terminal.integrated.cwd": "/src",
+
+                "redhat.telemetry.enabled": false,
+
+                "java.autobuild.enabled": false,
+                "java.import.gradle.enabled": false,
+                "java.import.maven.enabled": false,
+
+                "[yaml]": {
+                    "editor.defaultFormatter": "redhat.vscode-yaml"
+                },
+                "[json]": {
+                    "editor.defaultFormatter": "vscode.json-language-features"
+                },
+                "[markdown]": {
+                    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+                }
+            }
+        }
+    }
+}
