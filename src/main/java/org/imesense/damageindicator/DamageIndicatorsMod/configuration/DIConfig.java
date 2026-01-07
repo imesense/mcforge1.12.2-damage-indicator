@@ -4,10 +4,12 @@ import java.awt.RenderingHints;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-/* loaded from: input.jar:DamageIndicatorsMod/configuration/DIConfig.class */
-public class DIConfig {
+
+public class DIConfig
+{
     public final File CONFIG_FILE;
     private static DIConfig diConfig;
     public static float Size = 3.0f;
@@ -42,10 +44,13 @@ public class DIConfig {
     public static boolean useDropShadows = true;
     public static RenderingHints hints = populateHints();
 
-    private DIConfig(File file, int check) {
+    private DIConfig(File file, int check)
+    {
         this.CONFIG_FILE = file;
-        if (check == 1) {
-            if (!file.delete()) {
+        if (check == 1)
+        {
+            if (!file.delete())
+            {
                 file.deleteOnExit();
                 return;
             }
@@ -54,21 +59,28 @@ public class DIConfig {
         loadConfig();
     }
 
-    public static void loadConfig(File file) {
-        if (file == null) {
+    public static void loadConfig(File file)
+    {
+        if (file == null)
+        {
             diConfig = new DIConfig(mainInstance().CONFIG_FILE, 0);
-        } else {
+        }
+        else
+        {
             diConfig = new DIConfig(file, 0);
         }
     }
 
-    public static DIConfig useNewConfig(DIConfig newConfig) {
+    public static DIConfig useNewConfig(DIConfig newConfig)
+    {
         diConfig = newConfig;
         return mainInstance();
     }
 
-    public static void overrideConfigAndSave(DIConfig newConfig) {
-        try {
+    public static void overrideConfigAndSave(DIConfig newConfig)
+    {
+        try
+        {
             Configuration config = new Configuration(newConfig.CONFIG_FILE);
             config.load();
             config.addCustomCategoryComment("PopOffs", "These Settings effect the digits that bounce off mobs when they take damage.");
@@ -138,21 +150,27 @@ public class DIConfig {
             Property prop29 = config.get("Internal", "version", "");
             prop29.set("1");
             config.save();
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex)
+        {
             ex.printStackTrace();
         }
     }
 
-    public static DIConfig mainInstance() {
+    public static DIConfig mainInstance()
+    {
         return diConfig;
     }
 
-    private void loadConfig() {
-        try {
+    private void loadConfig()
+    {
+        try
+        {
             boolean flag = this.CONFIG_FILE.exists();
             Configuration config = new Configuration(this.CONFIG_FILE);
             config.load();
-            if (flag && !config.get("Internal", "version", "0").getString().equals("1")) {
+            if (flag && !config.get("Internal", "version", "0").getString().equals("1"))
+            {
                 overrideConfigAndSave(new DIConfig(this.CONFIG_FILE, 1));
                 return;
             }
@@ -189,34 +207,45 @@ public class DIConfig {
             this.healColor = (int) Long.parseLong(this.formattedHealColor, 16);
             Property prop5 = config.get("Portrait.Appearance", "Range", this.mouseoverRange);
             this.mouseoverRange = prop5.getInt(this.mouseoverRange);
-            if (this.mouseoverRange <= 0) {
+            if (this.mouseoverRange <= 0)
+            {
                 this.mouseoverRange = 20;
             }
-            if (this.mouseoverRange > 200) {
+            if (this.mouseoverRange > 200)
+            {
                 this.mouseoverRange = 200;
             }
             prop5.set(this.mouseoverRange);
             this.portraitEnabled = config.get("Portrait.Behavior", "Enable", this.portraitEnabled).getBoolean(this.portraitEnabled);
             Property prop6 = config.get("PopOffs.Behavior", "Gravity", "1.600");
-            try {
+            try
+            {
                 this.Gravity = Float.valueOf(prop6.getString()).floatValue();
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e)
+            {
                 this.Gravity = 0.8f;
                 prop6.set(this.Gravity);
             }
             this.popOffsEnabled = config.get("PopOffs.Behavior", "Enabled", this.popOffsEnabled).getBoolean(this.popOffsEnabled);
             Property prop7 = config.get("PopOffs.Behavior", "Bounce_Strength", this.BounceStrength);
-            try {
+            try
+            {
                 this.BounceStrength = Float.valueOf(prop7.getString()).floatValue();
-            } catch (NumberFormatException e2) {
+            }
+            catch (NumberFormatException e2)
+            {
                 this.BounceStrength = 1.5f;
                 prop7.set(this.BounceStrength);
             }
             this.packetrange = config.get("PopOffs.Behavior", "Range", this.packetrange).getInt(this.packetrange);
             Property prop8 = config.get("PopOffs.Behavior", "Size", this.Size);
-            try {
+            try
+            {
                 this.Size = Float.valueOf(prop8.getString()).floatValue();
-            } catch (NumberFormatException e3) {
+            }
+            catch (NumberFormatException e3)
+            {
                 this.Size = 3.0f;
                 prop8.set(this.Size);
             }
@@ -229,12 +258,15 @@ public class DIConfig {
             this.useDropShadows = config.get("PopOffs.Appearance", "useDropShadows", this.useDropShadows).getBoolean(this.useDropShadows);
             config.get("Internal", "version", "").set("1");
             config.save();
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex)
+        {
             ex.printStackTrace();
         }
     }
 
-    private static RenderingHints populateHints() {
+    private static RenderingHints populateHints()
+    {
         Map hintsMap = new HashMap();
         hintsMap.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         hintsMap.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);

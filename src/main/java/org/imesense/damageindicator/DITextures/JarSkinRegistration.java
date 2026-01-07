@@ -1,6 +1,5 @@
 package org.imesense.damageindicator.DITextures;
 
-import org.imesense.damageindicator.DamageIndicatorMod;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -8,39 +7,55 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
+
 import javax.imageio.ImageIO;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.config.Configuration;
-/* loaded from: input.jar:DITextures/JarSkinRegistration.class */
-public class JarSkinRegistration extends AbstractSkin {
+
+import org.imesense.damageindicator.DamageIndicatorMod;
+
+public class JarSkinRegistration extends AbstractSkin
+{
     File file;
 
-    private static void checkEntry(JarEntry jEntry) {
-        if (jEntry.getName().contains("defaultskins") && jEntry.getName().contains("skin.cfg")) {
+    private static void checkEntry(JarEntry jEntry)
+    {
+        if (jEntry.getName().contains("defaultskins") && jEntry.getName().contains("skin.cfg"))
+        {
             String thisSkin = jEntry.getName().substring(0, jEntry.getName().lastIndexOf("/"));
-            if (!thisSkin.startsWith("/")) {
+            if (!thisSkin.startsWith("/"))
+            {
                 thisSkin = "/" + thisSkin;
             }
-            if (!thisSkin.endsWith("/")) {
+            if (!thisSkin.endsWith("/"))
+            {
                 thisSkin = thisSkin + "/";
             }
-            if (!AbstractSkin.AVAILABLESKINS.contains(thisSkin)) {
+            if (!AbstractSkin.AVAILABLESKINS.contains(thisSkin))
+            {
                 AbstractSkin.AVAILABLESKINS.add(thisSkin);
             }
         }
     }
 
-    private static void giveDebuggingInfo(Object test) {
+    private static void giveDebuggingInfo(Object test)
+    {
     }
 
-    public static void scanJarForSkins(Class clazz) {
-        try {
+    public static void scanJarForSkins(Class clazz)
+    {
+        try
+        {
             URL url = clazz.getResource("/assets");
-            if (url != null) {
+            if (url != null)
+            {
                 Object test = url.openConnection();
-                if (test instanceof JarURLConnection) {
+                if (test instanceof JarURLConnection)
+                {
                     JarURLConnection juc = (JarURLConnection) test;
                     juc.setUseCaches(false);
                     juc.setDoInput(true);
@@ -48,30 +63,42 @@ public class JarSkinRegistration extends AbstractSkin {
                     juc.setAllowUserInteraction(true);
                     juc.connect();
                     Enumeration jEnum = juc.getJarFile().entries();
-                    while (jEnum.hasMoreElements()) {
-                        try {
+                    while (jEnum.hasMoreElements())
+                    {
+                        try
+                        {
                             checkEntry((JarEntry) jEnum.nextElement());
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e)
+                        {
                         }
                     }
-                } else if (!World.class.getName().endsWith("World")) {
+                }
+                else if (!World.class.getName().endsWith("World"))
+                {
                     giveDebuggingInfo(test);
                 }
             }
-        } catch (Exception e2) {
         }
-        if (!AbstractSkin.AVAILABLESKINS.contains("/assets/defaultskins/default/")) {
+        catch (Exception e2)
+        {
+        }
+        if (!AbstractSkin.AVAILABLESKINS.contains("/assets/defaultskins/default/"))
+        {
             AbstractSkin.AVAILABLESKINS.add("/assets/defaultskins/default/");
         }
-        if (!AbstractSkin.AVAILABLESKINS.contains("/assets/defaultskins/wowlike/")) {
+        if (!AbstractSkin.AVAILABLESKINS.contains("/assets/defaultskins/wowlike/"))
+        {
             AbstractSkin.AVAILABLESKINS.add("/assets/defaultskins/wowlike/");
         }
-        if (!AbstractSkin.AVAILABLESKINS.contains("/assets/defaultskins/minimal/")) {
+        if (!AbstractSkin.AVAILABLESKINS.contains("/assets/defaultskins/minimal/"))
+        {
             AbstractSkin.AVAILABLESKINS.add("/assets/defaultskins/minimal/");
         }
     }
 
-    public JarSkinRegistration(String skinName) {
+    public JarSkinRegistration(String skinName)
+    {
         setInternalName(skinName);
         setSkinValue(EnumSkinPart.FRAMENAME, skinName + "DIFrameSkin.png");
         setSkinValue(EnumSkinPart.TYPEICONSNAME, skinName + "DITypeIcons.png");
@@ -82,53 +109,69 @@ public class JarSkinRegistration extends AbstractSkin {
         setSkinValue(EnumSkinPart.LEFTPOTIONNAME, skinName + "leftPotions.png");
         setSkinValue(EnumSkinPart.RIGHTPOTIONNAME, skinName + "rightPotions.png");
         setSkinValue(EnumSkinPart.CENTERPOTIONNAME, skinName + "centerPotions.png");
-        try {
+        try
+        {
             this.file = File.createTempFile("skin", ".tmp");
-            try {
-                if (this.file.exists() && !this.file.delete()) {
+            try
+            {
+                if (this.file.exists() && !this.file.delete())
+                {
                     this.file.deleteOnExit();
                     this.file = File.createTempFile(String.valueOf(System.currentTimeMillis()), ".skin.tmp");
                 }
-                if (!this.file.createNewFile()) {
+                if (!this.file.createNewFile())
+                {
                 }
                 URL url = Minecraft.class.getResource(skinName + "skin.cfg");
                 InputStream cfg = url.openStream();
                 FileOutputStream fos = new FileOutputStream(this.file);
-                for (int bite = cfg.read(); bite != -1; bite = cfg.read()) {
+                for (int bite = cfg.read(); bite != -1; bite = cfg.read())
+                {
                     fos.write(bite);
                 }
                 fos.flush();
                 fos.close();
                 cfg.close();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 ex.printStackTrace();
             }
-        } catch (Exception ex2) {
+        }
+        catch (Exception ex2)
+        {
             ex2.printStackTrace();
         }
     }
 
-    @Override // DITextures.AbstractSkin
-    public void loadConfig() {
+    @Override
+    public void loadConfig()
+    {
         loadConfig(new Configuration(this.file));
         this.file.deleteOnExit();
     }
 
-    private DynamicTexture checkAndReload(EnumSkinPart enumID, EnumSkinPart enumName) {
+    private DynamicTexture checkAndReload(EnumSkinPart enumID, EnumSkinPart enumName)
+    {
         DynamicTexture ret = (DynamicTexture) getSkinValue(enumID);
-        if (ret == null) {
-            try {
+        if (ret == null)
+        {
+            try
+            {
                 String tmp = (String) getSkinValue(enumName);
                 ret = setupTexture(fixDim(ImageIO.read(DamageIndicatorMod.class.getResourceAsStream(tmp))), enumID);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 ex.printStackTrace();
             }
         }
         return ret;
     }
 
-    @Override // DITextures.AbstractSkin
-    public final void loadSkin() {
+    @Override
+    public final void loadSkin()
+    {
         setSkinValue(EnumSkinPart.FRAMEID, checkAndReload(EnumSkinPart.FRAMEID, EnumSkinPart.FRAMENAME));
         setSkinValue(EnumSkinPart.TYPEICONSID, checkAndReload(EnumSkinPart.TYPEICONSID, EnumSkinPart.TYPEICONSNAME));
         setSkinValue(EnumSkinPart.DAMAGEID, checkAndReload(EnumSkinPart.DAMAGEID, EnumSkinPart.DAMAGENAME));

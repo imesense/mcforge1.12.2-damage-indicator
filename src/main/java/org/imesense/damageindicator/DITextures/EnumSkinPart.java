@@ -1,6 +1,7 @@
 package org.imesense.damageindicator.DITextures;
-/* loaded from: input.jar:DITextures/EnumSkinPart.class */
-public enum EnumSkinPart {
+
+public enum EnumSkinPart
+{
     FRAMENAME(null, "/DITextures/Default/DIFramSkin.png"),
     FRAMEID(null, null),
     TYPEICONSNAME(null, "/DITextures/Default/DITypeIcons.png"),
@@ -51,20 +52,23 @@ public enum EnumSkinPart {
     CONFIGDISPLAYNM("SkinName", "Clean"),
     CONFIGAUTHOR("Author", "rich1051414"),
     INTERNAL(null, "/DITextures/Default/");
-    
+
     private final Object ext;
     private final Object extDefault;
 
-    EnumSkinPart(Object extended, Object configDefault) {
+    EnumSkinPart(Object extended, Object configDefault)
+    {
         this.ext = extended;
         this.extDefault = configDefault;
     }
 
-    public final Object getExtended() {
+    public final Object getExtended()
+    {
         return this.ext;
     }
 
-    public final Object getConfigDefault() {
+    public final Object getConfigDefault()
+    {
         return this.extDefault;
     }
 }

@@ -1,20 +1,24 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
-import org.imesense.damageindicator.DITextures.AbstractSkin;
-import org.imesense.damageindicator.DITextures.EnumSkinPart;
-import org.imesense.damageindicator.DITextures.JarSkinRegistration;
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
-/* loaded from: input.jar:DamageIndicatorsMod/gui/RepositionGui.class */
-public class RepositionGui extends GuiScreen {
+
+import org.imesense.damageindicator.DITextures.AbstractSkin;
+import org.imesense.damageindicator.DITextures.EnumSkinPart;
+import org.imesense.damageindicator.DITextures.JarSkinRegistration;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+
+public class RepositionGui extends GuiScreen
+{
     private DynamicTexture colorBarTex;
     public DIConfig diConfig;
     private DynamicTexture gradientTex;
@@ -27,9 +31,12 @@ public class RepositionGui extends GuiScreen {
     private boolean setDamageColor = false;
     private boolean setHealColor = false;
 
-    protected void actionPerformed(GuiButton par1GuiButton) throws IOException {
-        if (par1GuiButton instanceof GuiCheckBox) {
-            switch (par1GuiButton.id) {
+    protected void actionPerformed(GuiButton par1GuiButton) throws IOException
+    {
+        if (par1GuiButton instanceof GuiCheckBox)
+        {
+            switch (par1GuiButton.id)
+            {
                 case 0:
                     ((GuiCheckBox) par1GuiButton).setChecked(!((GuiCheckBox) par1GuiButton).isChecked());
                     this.diConfig.portraitEnabled = ((GuiCheckBox) par1GuiButton).checked;
@@ -51,8 +58,11 @@ public class RepositionGui extends GuiScreen {
                     this.diConfig.highCompatibilityMod = ((GuiCheckBox) par1GuiButton).checked;
                     break;
             }
-        } else {
-            switch (par1GuiButton.id) {
+        }
+        else
+        {
+            switch (par1GuiButton.id)
+            {
                 case 3:
                     this.mc.displayGuiScreen(new SkinGui(null, this.mc.gameSettings));
                     break;
@@ -67,17 +77,23 @@ public class RepositionGui extends GuiScreen {
         super.actionPerformed(par1GuiButton);
     }
 
-    public boolean doesGuiPauseGame() {
+    public boolean doesGuiPauseGame()
+    {
         return true;
     }
 
-    private void drawColorbar() {
+    private void drawColorbar()
+    {
         int finalColor;
-        if (this.colorBarTex == null) {
+        if (this.colorBarTex == null)
+        {
             int locx = 0;
-            for (int color = 0; color < 6; color++) {
-                for (int saturation = 0; saturation < 256; saturation++) {
-                    switch (color) {
+            for (int color = 0; color < 6; color++)
+            {
+                for (int saturation = 0; saturation < 256; saturation++)
+                {
+                    switch (color)
+                    {
                         case 0:
                             finalColor = 16711680 | saturation;
                             break;
@@ -99,7 +115,8 @@ public class RepositionGui extends GuiScreen {
                     }
                     int pos = locx;
                     locx++;
-                    for (int i = 0; i < 8; i++) {
+                    for (int i = 0; i < 8; i++)
+                    {
                         this.colorBar.setRGB(i, pos, finalColor);
                     }
                 }
@@ -108,7 +125,8 @@ public class RepositionGui extends GuiScreen {
         }
     }
 
-    private void drawColorSelector() {
+    private void drawColorSelector()
+    {
         drawRect(-2, -2, 72, 66, -2236963);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         this.gradientTex.updateDynamicTexture();
@@ -135,37 +153,54 @@ public class RepositionGui extends GuiScreen {
         GL11.glEnd();
     }
 
-    private void drawGradient(int startRed, int startGreen, int startBlue) {
-        if (startRed >= startBlue && startRed >= startGreen) {
+    private void drawGradient(int startRed, int startGreen, int startBlue)
+    {
+        if (startRed >= startBlue && startRed >= startGreen)
+        {
             startRed = 255;
-        } else if (startGreen >= startBlue && startGreen >= startRed) {
+        }
+        else if (startGreen >= startBlue && startGreen >= startRed)
+        {
             startGreen = 255;
-        } else {
+        }
+        else
+        {
             startBlue = 255;
         }
-        if (startRed <= startBlue && startRed <= startGreen) {
+        if (startRed <= startBlue && startRed <= startGreen)
+        {
             startRed = 0;
-        } else if (startGreen <= startBlue && startGreen <= startRed) {
+        }
+        else if (startGreen <= startBlue && startGreen <= startRed)
+        {
             startGreen = 0;
-        } else {
+        }
+        else
+        {
             startBlue = 0;
         }
-        for (int y = 0; y < 256; y++) {
-            for (int x = 0; x < 256; x++) {
+        for (int y = 0; y < 256; y++)
+        {
+            for (int x = 0; x < 256; x++)
+            {
                 this.Gradient.setRGB(x, y, (-16777216) | ((((startRed + (((255 - startRed) * y) / 255)) * x) / 255) * 65536) | ((((startGreen + (((255 - startGreen) * y) / 255)) * x) / 255) * 256) | (((startBlue + (((255 - startBlue) * y) / 255)) * x) / 255));
             }
         }
         this.gradientTex = new DynamicTexture(this.Gradient);
     }
 
-    public void drawScreen(int par1, int par2, float par3) {
+    public void drawScreen(int par1, int par2, float par3)
+    {
         drawDefaultBackground();
         GL11.glPushMatrix();
         ((GuiCheckBox) this.buttonList.get(6)).checked = this.diConfig.alternateRenderingMethod;
         ((GuiCheckBox) this.buttonList.get(7)).checked = this.diConfig.highCompatibilityMod;
-        if (!this.diConfig.portraitEnabled) {
+        if (!this.diConfig.portraitEnabled)
+        {
             ((GuiCheckBox) this.buttonList.get(1)).enabled = false;
-        } else {
+        }
+        else
+        {
             ((GuiCheckBox) this.buttonList.get(1)).enabled = true;
             GL11.glPushMatrix();
             GL11.glColor3f(1.0f, 1.0f, 1.0f);
@@ -198,7 +233,8 @@ public class RepositionGui extends GuiScreen {
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }
-        if (this.animationTick >= 1.0f) {
+        if (this.animationTick >= 1.0f)
+        {
             this.animationTick = -5.0f;
         }
         this.animationTick += 0.01f;
@@ -210,7 +246,8 @@ public class RepositionGui extends GuiScreen {
         drawRect(28, 0, 30, 22, -1441726384);
         GL11.glTranslatef(32.0f, 25.0f, 0.0f);
         drawRect(0, 0, 15, 13, (-16777216) | this.diConfig.DIColor);
-        if (this.setDamageColor) {
+        if (this.setDamageColor)
+        {
             drawRect(0, 2, 15, 0, -2236963);
             drawRect(0, 15, 15, 13, -2236963);
             drawRect(0, 0, 2, 15, -2236963);
@@ -222,7 +259,8 @@ public class RepositionGui extends GuiScreen {
         }
         GL11.glTranslatef(0.0f, 20.0f, 0.0f);
         drawRect(0, 0, 15, 15, (-16777216) | this.diConfig.healColor);
-        if (this.setHealColor) {
+        if (this.setHealColor)
+        {
             drawRect(0, 2, 15, 0, -2236963);
             drawRect(0, 15, 15, 13, -2236963);
             drawRect(0, 0, 2, 15, -2236963);
@@ -235,13 +273,16 @@ public class RepositionGui extends GuiScreen {
         GL11.glPopMatrix();
         boolean mouseOver = false;
         boolean mouseOver2 = false;
-        if (par1 > this.diConfig.locX && par1 < this.diConfig.locX + ((Integer) JarSkinRegistration.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGFRAMEWIDTH)).intValue() && par2 > this.diConfig.locY && par2 < this.diConfig.locY + ((Integer) JarSkinRegistration.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGFRAMEHEIGHT)).intValue()) {
+        if (par1 > this.diConfig.locX && par1 < this.diConfig.locX + ((Integer) JarSkinRegistration.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGFRAMEWIDTH)).intValue() && par2 > this.diConfig.locY && par2 < this.diConfig.locY + ((Integer) JarSkinRegistration.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGFRAMEHEIGHT)).intValue())
+        {
             mouseOver = true;
         }
-        if (par1 > ((GuiCheckBox) this.buttonList.get(7)).x - 20 && par2 > ((GuiCheckBox) this.buttonList.get(7)).y - 20 && par1 <= ((GuiCheckBox) this.buttonList.get(7)).getWidth()) {
+        if (par1 > ((GuiCheckBox) this.buttonList.get(7)).x - 20 && par2 > ((GuiCheckBox) this.buttonList.get(7)).y - 20 && par1 <= ((GuiCheckBox) this.buttonList.get(7)).getWidth())
+        {
             mouseOver2 = true;
         }
-        if (this.mouseDown) {
+        if (this.mouseDown)
+        {
             mouseOver = false;
             this.diConfig.locX = par1;
             this.diConfig.locY = par2;
@@ -256,7 +297,8 @@ public class RepositionGui extends GuiScreen {
         ((GuiCheckBox) this.buttonList.get(2)).setChecked(this.diConfig.popOffsEnabled);
         super.drawScreen(par1, par2, par3);
         GL11.glDepthFunc(519);
-        if (mouseOver) {
+        if (mouseOver)
+        {
             GL11.glPushMatrix();
             this.fontRenderer.getStringWidth("<Drag Me>");
             GL11.glTranslatef(par1, par2, 0.0f);
@@ -268,7 +310,8 @@ public class RepositionGui extends GuiScreen {
             this.fontRenderer.drawString("<Drag Me>", 7, 7, -1429418804);
             GL11.glPopMatrix();
         }
-        if (mouseOver2) {
+        if (mouseOver2)
+        {
             GL11.glPushMatrix();
             this.fontRenderer.getStringWidth("This option may decrease performance.");
             GL11.glTranslatef(par1, par2 - 22, 0.0f);
@@ -284,7 +327,8 @@ public class RepositionGui extends GuiScreen {
         GL11.glEnable(2929);
     }
 
-    public void initGui() {
+    public void initGui()
+    {
         super.initGui();
         int enablePortrait = this.fontRenderer.getStringWidth("Enable Portrait") + 12;
         this.buttonList.add(0, new GuiCheckBox(0, (this.width / 2) - (enablePortrait / 2), (this.height / 2) - 66, enablePortrait, 16, "Enable Portrait"));
@@ -315,21 +359,28 @@ public class RepositionGui extends GuiScreen {
         GL11.glClear(256);
     }
 
-    protected void keyTyped(char par1, int par2) throws IOException {
-        if (par2 != 14 && par2 != 211) {
-            if (Character.isDigit(par1)) {
+    protected void keyTyped(char par1, int par2) throws IOException
+    {
+        if (par2 != 14 && par2 != 211)
+        {
+            if (Character.isDigit(par1))
+            {
                 this.gtf.textboxKeyTyped(par1, par2);
                 int setVal = Integer.valueOf(this.gtf.getText()).intValue();
-                if (setVal > 200) {
+                if (setVal > 200)
+                {
                     int p = this.gtf.getCursorPosition();
                     this.gtf.setText("200");
                     this.gtf.setCursorPosition(p);
                 }
             }
-        } else {
+        }
+        else
+        {
             this.gtf.textboxKeyTyped(par1, par2);
             super.keyTyped(par1, par2);
-            if (this.gtf.getText().length() == 0) {
+            if (this.gtf.getText().length() == 0)
+            {
                 this.gtf.setText("0");
                 this.gtf.setCursorPositionZero();
                 this.gtf.setSelectionPos(1);
@@ -339,30 +390,43 @@ public class RepositionGui extends GuiScreen {
         super.keyTyped(par1, par2);
     }
 
-    protected void mouseClicked(int par1, int par2, int par3) throws IOException {
-        if (par3 == 0) {
-            try {
-                if (par2 >= (this.height / 2) - 36 && par2 <= (this.height / 2) + 28) {
-                    if (this.setDamageColor) {
-                        if (par1 >= (this.width / 2) + 53 && par1 <= (this.width / 2) + 116) {
+    protected void mouseClicked(int par1, int par2, int par3) throws IOException
+    {
+        if (par3 == 0)
+        {
+            try
+            {
+                if (par2 >= (this.height / 2) - 36 && par2 <= (this.height / 2) + 28)
+                {
+                    if (this.setDamageColor)
+                    {
+                        if (par1 >= (this.width / 2) + 53 && par1 <= (this.width / 2) + 116)
+                        {
                             int ex1 = par1 - ((this.width / 2) + 53);
                             int y = par2 - ((this.height / 2) - 36);
                             this.diConfig.DIColor = this.Gradient.getRGB(ex1 * 4, y * 4);
                             this.setDamageColor = false;
                             return;
-                        } else if (par1 >= (this.width / 2) + 119 && par1 <= (this.width / 2) + 123) {
+                        }
+                        else if (par1 >= (this.width / 2) + 119 && par1 <= (this.width / 2) + 123)
+                        {
                             int y2 = par2 - ((this.height / 2) - 36);
                             int pixelcolor = this.colorBar.getRGB(1, y2 * (this.colorBar.getHeight() / 64));
                             drawGradient((pixelcolor >> 16) & 255, (pixelcolor >> 8) & 255, pixelcolor & 255);
                         }
-                    } else if (this.setHealColor) {
-                        if (par1 >= (this.width / 2) + 53 && par1 <= (this.width / 2) + 116) {
+                    }
+                    else if (this.setHealColor)
+                    {
+                        if (par1 >= (this.width / 2) + 53 && par1 <= (this.width / 2) + 116)
+                        {
                             int ex12 = par1 - ((this.width / 2) + 53);
                             int y3 = par2 - ((this.height / 2) - 36);
                             this.diConfig.healColor = this.Gradient.getRGB(ex12 * 4, y3 * 4);
                             this.setHealColor = false;
                             return;
-                        } else if (par1 >= (this.width / 2) + 119 && par1 <= (this.width / 2) + 123) {
+                        }
+                        else if (par1 >= (this.width / 2) + 119 && par1 <= (this.width / 2) + 123)
+                        {
                             int y4 = par2 - ((this.height / 2) - 36);
                             int pixelcolor2 = this.colorBar.getRGB(1, y4 * (this.colorBar.getHeight() / 64));
                             drawGradient((pixelcolor2 >> 16) & 255, (pixelcolor2 >> 8) & 255, pixelcolor2 & 255);
@@ -370,20 +434,27 @@ public class RepositionGui extends GuiScreen {
                         }
                     }
                 }
-                if (par1 >= (((this.width / 2) + 30) - (this.textWidth / 2)) + 30 && par1 <= (((this.width / 2) + 30) - (this.textWidth / 2)) + 30 + 15) {
-                    if (par2 >= (this.height / 2) - 5 && par2 <= (this.height / 2) + 10) {
+                if (par1 >= (((this.width / 2) + 30) - (this.textWidth / 2)) + 30 && par1 <= (((this.width / 2) + 30) - (this.textWidth / 2)) + 30 + 15)
+                {
+                    if (par2 >= (this.height / 2) - 5 && par2 <= (this.height / 2) + 10)
+                    {
                         this.setDamageColor = true;
                         this.setHealColor = false;
                         drawGradient((this.diConfig.DIColor >> 16) & 255, (this.diConfig.DIColor >> 8) & 255, this.diConfig.DIColor & 255);
-                    } else if (par2 >= (this.height / 2) - 25 && par2 <= (this.height / 2) + 30) {
+                    }
+                    else if (par2 >= (this.height / 2) - 25 && par2 <= (this.height / 2) + 30)
+                    {
                         this.setHealColor = true;
                         this.setDamageColor = false;
                         drawGradient((this.diConfig.healColor >> 16) & 255, (this.diConfig.healColor >> 8) & 255, this.diConfig.healColor & 255);
                     }
                 }
-            } catch (Throwable th) {
             }
-            if (par1 >= this.diConfig.locX - 1 && par1 <= this.diConfig.locX + 137 && par2 >= this.diConfig.locY - 1 && par2 <= this.diConfig.locY + 52) {
+            catch (Throwable th)
+            {
+            }
+            if (par1 >= this.diConfig.locX - 1 && par1 <= this.diConfig.locX + 137 && par2 >= this.diConfig.locY - 1 && par2 <= this.diConfig.locY + 52)
+            {
                 this.mouseDown = true;
             }
         }
@@ -391,18 +462,22 @@ public class RepositionGui extends GuiScreen {
         super.mouseClicked(par1, par2, par3);
     }
 
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        if (state == 0) {
+    protected void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        if (state == 0)
+        {
             this.mouseDown = false;
         }
         super.mouseReleased(mouseX, mouseY, state);
     }
 
-    public void onGuiClosed() {
+    public void onGuiClosed()
+    {
         super.onGuiClosed();
     }
 
-    public void updateScreen() {
+    public void updateScreen()
+    {
         this.gtf.updateCursorCounter();
         super.updateScreen();
     }

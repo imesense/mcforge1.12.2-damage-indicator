@@ -1,20 +1,23 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
-import org.imesense.damageindicator.DITextures.AbstractSkin;
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
 import java.util.List;
+
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-/* loaded from: input.jar:DamageIndicatorsMod/gui/SkinSlot.class */
-public class SkinSlot {
+
+import org.imesense.damageindicator.DITextures.AbstractSkin;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+
+public class SkinSlot
+{
     private SkinGui parentTexturePackGui;
 
-    /* renamed from: mc */
     private Minecraft f3mc;
     public int selectedEntry;
     private final Minecraft client;
@@ -42,33 +45,40 @@ public class SkinSlot {
     int boxHeight;
     int boxLocY;
 
-    protected int getSize() {
+    protected int getSize()
+    {
         return AbstractSkin.AVAILABLESKINS.size();
     }
 
-    public SkinSlot(SkinGui par1GuiTexturePacks) {
+    public SkinSlot(SkinGui par1GuiTexturePacks)
+    {
         this(Minecraft.getMinecraft(), par1GuiTexturePacks.width - 128, par1GuiTexturePacks.height - 128, 64, par1GuiTexturePacks.height - 64, 64, 32);
         this.parentTexturePackGui = par1GuiTexturePacks;
         this.selectedEntry = 0;
-        if (DIConfig.portraitEnabled) {
+        if (DIConfig.portraitEnabled)
+        {
             this.selectedEntry = AbstractSkin.AVAILABLESKINS.indexOf(DIConfig.selectedSkin);
         }
     }
 
-    protected void elementClicked(int par1, boolean par2) {
+    protected void elementClicked(int par1, boolean par2)
+    {
         DIConfig.selectedSkin = AbstractSkin.AVAILABLESKINS.get(par1);
         AbstractSkin.setSkin(DIConfig.selectedSkin);
-        if (par2) {
+        if (par2)
+        {
             Minecraft.getMinecraft().displayGuiScreen(this.parentTexturePackGui);
         }
         this.selectedEntry = par1;
     }
 
-    protected boolean isSelected(int index) {
+    protected boolean isSelected(int index)
+    {
         return this.selectedEntry == index;
     }
 
-    protected void drawSlot(int par1, int par2, int par3, int par4) {
+    protected void drawSlot(int par1, int par2, int par3, int par4)
+    {
         String text1 = AbstractSkin.getSkinName(AbstractSkin.AVAILABLESKINS.get(par1));
         String text2 = AbstractSkin.getAuthor(AbstractSkin.AVAILABLESKINS.get(par1));
         int var10003 = this.left + 4;
@@ -77,7 +87,8 @@ public class SkinSlot {
         this.parentTexturePackGui.drawString(Minecraft.getMinecraft().fontRenderer, text2, var100032, par3 + 15, 3398963);
     }
 
-    public SkinSlot(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight) {
+    public SkinSlot(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight)
+    {
         this.selectedEntry = 0;
         this.initialMouseClickY = -2.0f;
         this.selectedIndex = -1;
@@ -100,67 +111,86 @@ public class SkinSlot {
         this.selectedEntry = AbstractSkin.AVAILABLESKINS.indexOf(DIConfig.selectedSkin);
     }
 
-    public void setShowSelectionBox(boolean par1) {
+    public void setShowSelectionBox(boolean par1)
+    {
         this.showSelectionBox = par1;
     }
 
-    protected void func_77223_a(boolean par1, int par2) {
+    protected void func_77223_a(boolean par1, int par2)
+    {
         this.field_77243_s = par1;
         this.field_77242_t = par2;
-        if (!par1) {
+        if (!par1)
+        {
             this.field_77242_t = 0;
         }
     }
 
-    protected int getContentHeight() {
+    protected int getContentHeight()
+    {
         return (getSize() * this.slotHeight) + this.field_77242_t;
     }
 
-    protected void func_77222_a(int par1, int par2, Tessellator par3Tessellator) {
+    protected void func_77222_a(int par1, int par2, Tessellator par3Tessellator)
+    {
     }
 
-    protected void func_77224_a(int par1, int par2) {
+    protected void func_77224_a(int par1, int par2)
+    {
     }
 
-    protected void func_77215_b(int par1, int par2) {
+    protected void func_77215_b(int par1, int par2)
+    {
     }
 
-    public int func_77210_c(int par1, int par2) {
+    public int func_77210_c(int par1, int par2)
+    {
         int var3 = this.left + 1;
         int var4 = (this.left + this.listWidth) - 7;
         int var5 = (((par2 - this.top) - this.field_77242_t) + ((int) this.scrollDistance)) - 4;
         int var6 = var5 / this.slotHeight;
-        if (par1 < var3 || par1 > var4 || var6 < 0 || var5 < 0 || var6 >= getSize()) {
+        if (par1 < var3 || par1 > var4 || var6 < 0 || var5 < 0 || var6 >= getSize())
+        {
             return -1;
         }
         return var6;
     }
 
-    public void registerScrollButtons(List par1List, int par2, int par3) {
+    public void registerScrollButtons(List par1List, int par2, int par3)
+    {
         this.scrollUpActionId = par2;
         this.scrollDownActionId = par3;
     }
 
-    private void applyScrollLimits() {
+    private void applyScrollLimits()
+    {
         int var1 = getContentHeight() - ((this.bottom - this.top) - 4);
-        if (var1 < 0) {
+        if (var1 < 0)
+        {
             var1 /= 2;
         }
-        if (this.scrollDistance < 0.0f) {
+        if (this.scrollDistance < 0.0f)
+        {
             this.scrollDistance = 0.0f;
         }
-        if (this.scrollDistance > var1) {
+        if (this.scrollDistance > var1)
+        {
             this.scrollDistance = var1;
         }
     }
 
-    public void actionPerformed(GuiButton button) {
-        if (button.enabled) {
-            if (button.id == this.scrollUpActionId) {
+    public void actionPerformed(GuiButton button)
+    {
+        if (button.enabled)
+        {
+            if (button.id == this.scrollUpActionId)
+            {
                 this.scrollDistance -= (this.slotHeight * 2) / 3;
                 this.initialMouseClickY = -2.0f;
                 applyScrollLimits();
-            } else if (button.id == this.scrollDownActionId) {
+            }
+            else if (button.id == this.scrollDownActionId)
+            {
                 this.scrollDistance += (this.slotHeight * 2) / 3;
                 this.initialMouseClickY = -2.0f;
                 applyScrollLimits();
@@ -168,17 +198,21 @@ public class SkinSlot {
         }
     }
 
-    public static void addVertexWithUV(double x, double y, double z, double u, double v) {
+    public static void addVertexWithUV(double x, double y, double z, double u, double v)
+    {
         GL11.glTexCoord2d(u, v);
         GL11.glVertex3d(x, y, z);
     }
 
-    public static void addVertex(double x, double y, double z) {
+    public static void addVertex(double x, double y, double z)
+    {
         GL11.glVertex3d(x, y, z);
     }
 
-    public void drawScreen(int mouseX, int mouseY, float par3) {
-        try {
+    public void drawScreen(int mouseX, int mouseY, float par3)
+    {
+        try
+        {
             GL11.glEnable(3089);
             GL11.glScissor(this.boxLocX, this.boxLocY, this.boxWidth, this.boxHeight);
             this.mouseX = mouseX;
@@ -188,57 +222,83 @@ public class SkinSlot {
             int scrollBarXEnd = scrollBarXStart + 6;
             int boxLeft = this.left;
             int boxRight = scrollBarXStart - 1;
-            if (Mouse.isButtonDown(0)) {
-                if (this.initialMouseClickY == -1.0f) {
+            if (Mouse.isButtonDown(0))
+            {
+                if (this.initialMouseClickY == -1.0f)
+                {
                     boolean var18 = true;
-                    if (mouseY >= this.top && mouseY <= this.bottom) {
+                    if (mouseY >= this.top && mouseY <= this.bottom)
+                    {
                         int var10 = (((mouseY - this.top) - this.field_77242_t) + ((int) this.scrollDistance)) - 4;
                         int var11 = var10 / this.slotHeight;
-                        if (mouseX >= boxLeft && mouseX <= boxRight && var11 >= 0 && var10 >= 0 && var11 < ex) {
+                        if (mouseX >= boxLeft && mouseX <= boxRight && var11 >= 0 && var10 >= 0 && var11 < ex)
+                        {
                             boolean var17 = var11 == this.selectedIndex && System.currentTimeMillis() - this.lastClickTime < 250;
                             elementClicked(var11, var17);
                             this.selectedIndex = var11;
                             this.lastClickTime = System.currentTimeMillis();
-                        } else if (mouseX >= boxLeft && mouseX <= boxRight && var10 < 0) {
+                        }
+                        else if (mouseX >= boxLeft && mouseX <= boxRight && var10 < 0)
+                        {
                             func_77224_a(mouseX - boxLeft, ((mouseY - this.top) + ((int) this.scrollDistance)) - 4);
                             var18 = false;
                         }
-                        if (mouseX >= scrollBarXStart && mouseX <= scrollBarXEnd) {
+                        if (mouseX >= scrollBarXStart && mouseX <= scrollBarXEnd)
+                        {
                             this.scrollFactor = -1.0f;
                             int var19 = getContentHeight() - ((this.bottom - this.top) - 4);
-                            if (var19 < 1) {
+                            if (var19 < 1)
+                            {
                                 var19 = 1;
                             }
                             int var13 = (int) (((this.bottom - this.top) * (this.bottom - this.top)) / getContentHeight());
-                            if (var13 < 32) {
+                            if (var13 < 32)
+                            {
                                 var13 = 32;
                             }
-                            if (var13 > (this.bottom - this.top) - 8) {
+                            if (var13 > (this.bottom - this.top) - 8)
+                            {
                                 var13 = (this.bottom - this.top) - 8;
                             }
                             this.scrollFactor /= ((this.bottom - this.top) - var13) / var19;
-                        } else {
+                        }
+                        else
+                        {
                             this.scrollFactor = 1.0f;
                         }
-                        if (var18) {
+                        if (var18)
+                        {
                             this.initialMouseClickY = mouseY;
-                        } else {
+                        }
+                        else
+                        {
                             this.initialMouseClickY = -2.0f;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         this.initialMouseClickY = -2.0f;
                     }
-                } else if (this.initialMouseClickY >= 0.0f) {
+                }
+                else if (this.initialMouseClickY >= 0.0f)
+                {
                     this.scrollDistance -= (mouseY - this.initialMouseClickY) * this.scrollFactor;
                     this.initialMouseClickY = mouseY;
                 }
-            } else {
-                while (Mouse.next()) {
+            }
+            else
+            {
+                while (Mouse.next())
+                {
                     int var181 = Mouse.getEventDWheel();
-                    if (var181 != 0) {
-                        if (var181 > 0) {
+                    if (var181 != 0)
+                    {
+                        if (var181 > 0)
+                        {
                             var181 = -1;
-                        } else if (var181 < 0) {
+                        }
+                        else if (var181 < 0)
+                        {
                             var181 = 1;
                         }
                         this.scrollDistance += (var181 * this.slotHeight) / 2;
@@ -262,13 +322,17 @@ public class SkinSlot {
             GL11.glEnd();
             GL11.glEnable(3553);
             int var102 = (this.top + 4) - ((int) this.scrollDistance);
-            if (this.field_77243_s) {
+            if (this.field_77243_s)
+            {
             }
-            for (int var112 = 0; var112 < ex; var112++) {
+            for (int var112 = 0; var112 < ex; var112++)
+            {
                 int var192 = var102 + (var112 * this.slotHeight) + this.field_77242_t;
                 int var132 = this.slotHeight - 4;
-                if (var192 <= this.bottom && var192 + var132 >= this.top) {
-                    if (this.showSelectionBox && isSelected(var112)) {
+                if (var192 <= this.bottom && var192 + var132 >= this.top)
+                {
+                    if (this.showSelectionBox && isSelected(var112))
+                    {
                         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
                         GL11.glEnable(3042);
                         GL11.glBlendFunc(770, 771);
@@ -317,16 +381,20 @@ public class SkinSlot {
             addVertexWithUV(this.left, this.bottom - 4, 0.0d, 0.0d, 0.0d);
             GL11.glEnd();
             int var193 = getContentHeight() - ((this.bottom - this.top) - 4);
-            if (var193 > 0) {
+            if (var193 > 0)
+            {
                 int var133 = ((this.bottom - this.top) * (this.bottom - this.top)) / getContentHeight();
-                if (var133 < 32) {
+                if (var133 < 32)
+                {
                     var133 = 32;
                 }
-                if (var133 > (this.bottom - this.top) - 8) {
+                if (var133 > (this.bottom - this.top) - 8)
+                {
                     var133 = (this.bottom - this.top) - 8;
                 }
                 int var14 = ((((int) this.scrollDistance) * ((this.bottom - this.top) - var133)) / var193) + this.top;
-                if (var14 < this.top) {
+                if (var14 < this.top)
+                {
                     var14 = this.top;
                 }
                 GL11.glBegin(7);
@@ -364,11 +432,14 @@ public class SkinSlot {
             GL11.glDisable(3042);
             GL11.glDisable(3089);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        } catch (Throwable var171) {
+        }
+        catch (Throwable var171)
+        {
             var171.printStackTrace();
         }
     }
 
-    private void overlayBackground(int par1, int par2, int par3, int par4) {
+    private void overlayBackground(int par1, int par2, int par3, int par4)
+    {
     }
 }

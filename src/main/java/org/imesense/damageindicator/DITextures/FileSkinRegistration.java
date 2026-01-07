@@ -4,14 +4,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
 import javax.imageio.ImageIO;
+
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraftforge.common.config.Configuration;
-/* loaded from: input.jar:DITextures/FileSkinRegistration.class */
-public class FileSkinRegistration extends AbstractSkin {
+
+public class FileSkinRegistration extends AbstractSkin
+{
     private File file;
 
-    public FileSkinRegistration(String path) {
+    public FileSkinRegistration(String path)
+    {
         String pathName = cleanup(path.replace("file:", ""));
         setInternalName(pathName);
         setSkinValue(EnumSkinPart.FRAMENAME, pathName + "DIFrameSkin.png");
@@ -26,31 +30,40 @@ public class FileSkinRegistration extends AbstractSkin {
         this.file = new File(pathName + "skin.cfg");
     }
 
-    @Override // DITextures.AbstractSkin
-    public void loadConfig() {
+    @Override
+    public void loadConfig()
+    {
         Configuration config = new Configuration(this.file);
         loadConfig(config);
         config.save();
     }
 
-    private InputStream getFileInputStream(String path) throws FileNotFoundException {
+    private InputStream getFileInputStream(String path) throws FileNotFoundException
+    {
         return new FileInputStream(path);
     }
 
-    private static String cleanup(String string) {
+    private static String cleanup(String string)
+    {
         String ret = string;
-        if (ret.contains(File.separator + "." + File.separator)) {
+        if (ret.contains(File.separator + "." + File.separator))
+        {
             ret = ret.replace(File.separator + "." + File.separator, File.separator);
-        } else if (ret.contains("\\.\\")) {
+        }
+        else if (ret.contains("\\.\\"))
+        {
             ret = ret.replaceAll("\\\\.\\\\", "\\\\");
-        } else if (ret.contains("/./")) {
+        }
+        else if (ret.contains("/./"))
+        {
             ret = ret.replace("/./", "/");
         }
         return ret;
     }
 
-    @Override // DITextures.AbstractSkin
-    public final void loadSkin() {
+    @Override
+    public final void loadSkin()
+    {
         setSkinValue(EnumSkinPart.FRAMEID, checkAndReload(EnumSkinPart.FRAMEID, EnumSkinPart.FRAMENAME));
         setSkinValue(EnumSkinPart.TYPEICONSID, checkAndReload(EnumSkinPart.TYPEICONSID, EnumSkinPart.TYPEICONSNAME));
         setSkinValue(EnumSkinPart.DAMAGEID, checkAndReload(EnumSkinPart.DAMAGEID, EnumSkinPart.DAMAGENAME));
@@ -63,29 +76,40 @@ public class FileSkinRegistration extends AbstractSkin {
         loadConfig();
     }
 
-    private DynamicTexture checkAndReload(EnumSkinPart enumID, EnumSkinPart enumName) {
+    private DynamicTexture checkAndReload(EnumSkinPart enumID, EnumSkinPart enumName)
+    {
         DynamicTexture ret = (DynamicTexture) getSkinValue(enumID);
-        if (ret == null) {
-            try {
+        if (ret == null)
+        {
+            try
+            {
                 String tmp = (String) getSkinValue(enumName);
                 ret = setupTexture(fixDim(ImageIO.read(getFileInputStream(tmp))), enumID);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 ex.printStackTrace();
             }
         }
         return ret;
     }
 
-    public static void scanFilesForSkins(File path) {
+    public static void scanFilesForSkins(File path)
+    {
         File[] listFiles;
         File[] listFiles2;
         try {
-            for (File file : path.listFiles()) {
-                if (file.isDirectory()) {
-                    for (File files : file.listFiles()) {
-                        if (files.getAbsolutePath().endsWith("skin.cfg")) {
+            for (File file : path.listFiles())
+            {
+                if (file.isDirectory())
+                {
+                    for (File files : file.listFiles())
+                    {
+                        if (files.getAbsolutePath().endsWith("skin.cfg"))
+                        {
                             String thisSkin = files.getAbsolutePath().substring(0, files.getAbsolutePath().lastIndexOf(File.separator));
-                            if (!thisSkin.endsWith(File.separator)) {
+                            if (!thisSkin.endsWith(File.separator))
+                            {
                                 thisSkin = thisSkin + File.separator;
                             }
                             AVAILABLESKINS.add("file:" + thisSkin);
@@ -93,7 +117,9 @@ public class FileSkinRegistration extends AbstractSkin {
                     }
                 }
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             ex.getStackTrace();
         }
     }

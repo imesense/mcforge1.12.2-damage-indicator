@@ -1,7 +1,6 @@
 package org.imesense.damageindicator.DITextures;
 
-import org.imesense.damageindicator.DamageIndicatorMod;
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;import java.awt.Graphics2D;
+import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -13,12 +12,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+
 import net.minecraftforge.common.config.Configuration;
-import org.lwjgl.opengl.GL11;
-/* loaded from: input.jar:DITextures/AbstractSkin.class */
-public abstract class AbstractSkin {
+
+import org.imesense.damageindicator.DamageIndicatorMod;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+
+public abstract class AbstractSkin
+{
     private static String lastSkinUsed;
     private final EnumMap<EnumSkinPart, Object> skinMap = new EnumMap<>(EnumSkinPart.class);
     public static final List<String> AVAILABLESKINS = new ArrayList();
@@ -29,24 +35,33 @@ public abstract class AbstractSkin {
 
     public abstract void loadSkin();
 
-    public static BufferedImage fixDim(BufferedImage nonpoweroftwo) {
+    public static BufferedImage fixDim(BufferedImage nonpoweroftwo)
+    {
         BufferedImage resized;
         int width = nonpoweroftwo.getWidth();
         int scaledwidth = width;
-        if (!isPowerOfTwoFast(width)) {
+        if (!isPowerOfTwoFast(width))
+        {
             scaledwidth = upperPowerOfTwo(width);
         }
         int height = nonpoweroftwo.getHeight();
         int scaledheight = height;
-        if (!isPowerOfTwoFast(height)) {
+        if (!isPowerOfTwoFast(height))
+        {
             scaledheight = upperPowerOfTwo(height);
         }
-        if (width == scaledwidth && height == scaledheight) {
+        if (width == scaledwidth && height == scaledheight)
+        {
             resized = nonpoweroftwo;
-        } else {
-            try {
+        }
+        else
+        {
+            try
+            {
                 resized = new BufferedImage(scaledwidth, scaledheight, nonpoweroftwo.getType());
-            } catch (Throwable th) {
+            }
+            catch (Throwable th)
+            {
                 resized = new BufferedImage(scaledwidth, scaledheight, 5);
             }
             Graphics2D graphics = resized.createGraphics();
@@ -60,28 +75,36 @@ public abstract class AbstractSkin {
         return resized;
     }
 
-    public static AbstractSkin getActiveSkin() {
+    public static AbstractSkin getActiveSkin()
+    {
         return setSkin(DIConfig.selectedSkin);
     }
 
-    public static String getAuthor(String internalName) {
+    public static String getAuthor(String internalName)
+    {
         return (String) SKINS.get(internalName).getSkinValue(EnumSkinPart.CONFIGAUTHOR);
     }
 
-    public static String getSkinName(String internalName) {
+    public static String getSkinName(String internalName)
+    {
         return (String) SKINS.get(internalName).getSkinValue(EnumSkinPart.CONFIGDISPLAYNM);
     }
 
-    public static void init() {
+    public static void init()
+    {
         AbstractSkin jarSkinRegistration;
         JarSkinRegistration.scanJarForSkins(DamageIndicatorMod.class);
         File file = new File(Minecraft.getMinecraft().gameDir, "CustomDISkins");
         file.mkdirs();
         FileSkinRegistration.scanFilesForSkins(file);
-        for (String s : AVAILABLESKINS) {
-            if (s.startsWith("file:")) {
+        for (String s : AVAILABLESKINS)
+        {
+            if (s.startsWith("file:"))
+            {
                 jarSkinRegistration = new FileSkinRegistration(s);
-            } else {
+            }
+            else
+            {
                 jarSkinRegistration = new JarSkinRegistration(s);
             }
             AbstractSkin skin = jarSkinRegistration;
@@ -89,7 +112,8 @@ public abstract class AbstractSkin {
             skin.loadSkin();
             SKINS.put(s, skin);
         }
-        if (!AVAILABLESKINS.contains(DIConfig.selectedSkin)) {
+        if (!AVAILABLESKINS.contains(DIConfig.selectedSkin))
+        {
             DIConfig.selectedSkin = "/assets/defaultskins/default/";
             setSkin(DIConfig.selectedSkin);
         }
@@ -97,23 +121,30 @@ public abstract class AbstractSkin {
         getActiveSkin().loadSkin();
     }
 
-    private static boolean isPowerOfTwoFast(int num) {
+    private static boolean isPowerOfTwoFast(int num)
+    {
         return num != 0 && (num & (num - 1)) == 0;
     }
 
-    public static void refreshSkin() {
+    public static void refreshSkin()
+    {
         releaseCurrentTextures();
         getActiveSkin().loadSkin();
     }
 
-    private static void releaseCurrentTextures() {
+    private static void releaseCurrentTextures()
+    {
         AbstractSkin lastSkin = SKINS.get(lastSkinUsed);
-        if (lastSkin != null) {
+        if (lastSkin != null)
+        {
             Iterator it = EnumSet.allOf(EnumSkinPart.class).iterator();
-            while (it.hasNext()) {
+            while (it.hasNext())
+            {
                 EnumSkinPart esp = (EnumSkinPart) it.next();
-                if (esp.name().endsWith("ID")) {
-                    if (((DynamicTexture) lastSkin.skinMap.get(esp)) != null) {
+                if (esp.name().endsWith("ID"))
+                {
+                    if (((DynamicTexture) lastSkin.skinMap.get(esp)) != null)
+                    {
                         GL11.glDeleteTextures(((DynamicTexture) lastSkin.skinMap.get(esp)).getGlTextureId());
                     }
                     lastSkin.skinMap.put(esp, (EnumSkinPart) null);
@@ -122,22 +153,32 @@ public abstract class AbstractSkin {
         }
     }
 
-    public static AbstractSkin setSkin(String skin) {
-        if (lastSkinUsed != null && !lastSkinUsed.equals(skin)) {
+    public static AbstractSkin setSkin(String skin)
+    {
+        if (lastSkinUsed != null && !lastSkinUsed.equals(skin))
+        {
             releaseCurrentTextures();
-            if (SKINS.containsKey(skin)) {
+            if (SKINS.containsKey(skin))
+            {
                 SKINS.get(skin).loadSkin();
             }
         }
-        if (!SKINS.containsKey(skin)) {
-            try {
-                if (skin.startsWith("file:")) {
+        if (!SKINS.containsKey(skin))
+        {
+            try
+            {
+                if (skin.startsWith("file:"))
+                {
                     SKINS.put(skin, new FileSkinRegistration(skin));
-                } else {
+                }
+                else
+                {
                     SKINS.put(skin, new JarSkinRegistration(skin));
                 }
                 SKINS.get(skin).loadSkin();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 ex.printStackTrace();
             }
         }
@@ -145,7 +186,8 @@ public abstract class AbstractSkin {
         return SKINS.get(skin);
     }
 
-    private static int upperPowerOfTwo(int num) {
+    private static int upperPowerOfTwo(int num)
+    {
         int newnum = num - 1;
         int newnum2 = newnum | (newnum >> 1);
         int newnum3 = newnum2 | (newnum2 >> 2);
@@ -154,49 +196,66 @@ public abstract class AbstractSkin {
         return (newnum5 | (newnum5 >> 16)) + 1;
     }
 
-    public AbstractSkin() {
+    public AbstractSkin()
+    {
         Iterator it = EnumSet.allOf(EnumSkinPart.class).iterator();
-        while (it.hasNext()) {
+        while (it.hasNext())
+        {
             EnumSkinPart esp = (EnumSkinPart) it.next();
             this.skinMap.put(esp, esp.getConfigDefault());
         }
     }
 
-    public final void bindTexture(EnumSkinPart enumSkinPart) {
+    public final void bindTexture(EnumSkinPart enumSkinPart)
+    {
         ((DynamicTexture) this.skinMap.get(enumSkinPart)).updateDynamicTexture();
     }
 
-    public final String getInternalName() {
+    public final String getInternalName()
+    {
         return (String) this.skinMap.get(EnumSkinPart.INTERNAL);
     }
 
-    public final Object getSkinValue(EnumSkinPart enumSkinPart) {
+    public final Object getSkinValue(EnumSkinPart enumSkinPart)
+    {
         return this.skinMap.get(enumSkinPart);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public final void loadConfig(Configuration config) {
+    public final void loadConfig(Configuration config)
+    {
         String strCat;
         config.load();
         Iterator it = EnumSet.allOf(EnumSkinPart.class).iterator();
-        while (it.hasNext()) {
+        while (it.hasNext())
+        {
             EnumSkinPart enumSkinPart = (EnumSkinPart) it.next();
             String spName = enumSkinPart.name();
             String strKey = (String) enumSkinPart.getExtended();
-            if (strKey != null) {
+            if (strKey != null)
+            {
                 Object defaultVal = enumSkinPart.getConfigDefault();
-                if (spName.endsWith("WIDTH") || spName.endsWith("HEIGHT")) {
+                if (spName.endsWith("WIDTH") || spName.endsWith("HEIGHT"))
+                {
                     strCat = "Skin config.Sizes";
-                } else if (spName.endsWith("X") || spName.endsWith("Y") || spName.endsWith("OFFSET")) {
+                }
+                else if (spName.endsWith("X") || spName.endsWith("Y") || spName.endsWith("OFFSET"))
+                {
                     strCat = "Skin config.Positions";
-                } else if (spName.contains("CONFIGTEXTEXT")) {
+                }
+                else if (spName.contains("CONFIGTEXTEXT"))
+                {
                     strCat = "Skin config.TextSettings";
-                } else {
+                }
+                else
+                {
                     strCat = "Skin config.Info";
                 }
-                if (defaultVal instanceof Integer) {
+                if (defaultVal instanceof Integer)
+                {
                     this.skinMap.put(enumSkinPart, Integer.valueOf(config.get(strCat, strKey, ((Integer) defaultVal).intValue()).getInt(((Integer) defaultVal).intValue())));
-                } else {
+                }
+                else
+                {
                     this.skinMap.put( enumSkinPart, config.get(strCat, strKey, (String) defaultVal).getString());
                 }
             }
@@ -205,7 +264,8 @@ public abstract class AbstractSkin {
         config.save();
     }
 
-    private Ordering[] populateOrdering(Configuration config) {
+    private Ordering[] populateOrdering(Configuration config)
+    {
         Ordering[] ordering = new Ordering[9];
         ordering[config.get("Skin config.Ordering", "HealthBarOrder", 3).getInt(3) - 1] = Ordering.HEALTHBAR;
         ordering[config.get("Skin config.Ordering", "FrameOrder", 5).getInt(5) - 1] = Ordering.FRAME;
@@ -219,20 +279,26 @@ public abstract class AbstractSkin {
         return ordering;
     }
 
-    public final void setInternalName(String newInternalName) {
+    public final void setInternalName(String newInternalName)
+    {
         this.skinMap.put(EnumSkinPart.INTERNAL, newInternalName);
     }
 
-    public final void setSkinValue(EnumSkinPart enumSkinPart, Object value) {
+    public final void setSkinValue(EnumSkinPart enumSkinPart, Object value)
+    {
         this.skinMap.put(enumSkinPart, value);
     }
 
-    public final DynamicTexture setupTexture(BufferedImage bufImg, EnumSkinPart uniqueName) {
+    public final DynamicTexture setupTexture(BufferedImage bufImg, EnumSkinPart uniqueName)
+    {
         DynamicTexture check = (DynamicTexture) this.skinMap.get(uniqueName);
-        if (check == null) {
+        if (check == null)
+        {
             check = new DynamicTexture(bufImg);
             this.skinMap.put(uniqueName, check);
-        } else {
+        }
+        else
+        {
             bufImg.getRGB(0, 0, bufImg.getWidth(), bufImg.getHeight(), check.getTextureData(), 0, bufImg.getWidth());
         }
         return check;

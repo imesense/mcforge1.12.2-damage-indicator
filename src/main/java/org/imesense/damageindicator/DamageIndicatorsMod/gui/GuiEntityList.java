@@ -1,80 +1,107 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
-import org.imesense.damageindicator.DamageIndicatorsMod.core.EntityConfigurationEntry;
-import org.imesense.damageindicator.DamageIndicatorsMod.core.Tools;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
+
 import net.minecraftforge.fml.client.GuiScrollingList;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-/* loaded from: input.jar:DamageIndicatorsMod/gui/GuiEntityList.class */
-public class GuiEntityList extends GuiScrollingList {
+
+import org.imesense.damageindicator.DamageIndicatorsMod.core.EntityConfigurationEntry;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.Tools;
+
+public class GuiEntityList extends GuiScrollingList
+{
     private AdvancedGui parent;
     public static List<EntityConfigurationEntry> entities;
     public List<EntityConfigurationEntry> visibleEntities;
     public int selectedEntry;
 
-    public GuiEntityList(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, AdvancedGui parent) {
+    public GuiEntityList(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, AdvancedGui parent)
+    {
         super(client, width, height, top, bottom, left, entryHeight);
         this.selectedEntry = 0;
         this.parent = parent;
         this.visibleEntities = new ArrayList(entities);
     }
 
-    protected int getSize() {
+    protected int getSize()
+    {
         return this.visibleEntities.size();
     }
 
-    protected void elementClicked(int index, boolean doubleClick) {
+    protected void elementClicked(int index, boolean doubleClick)
+    {
         this.selectedEntry = index;
         this.parent.listClickedCallback(index);
     }
 
-    protected boolean isSelected(int index) {
+    protected boolean isSelected(int index)
+    {
         return this.selectedEntry == index;
     }
 
-    protected void drawBackground() {
+    protected void drawBackground()
+    {
         this.parent.drawBackground(2);
     }
 
-    protected void drawSlot(int listIndex, int var2, int var3, int var4, Tessellator var5) {
-        try {
+    protected void drawSlot(int listIndex, int var2, int var3, int var4, Tessellator var5)
+    {
+        try
+        {
             Map classToStringMapping = Tools.getEntityList();
             String entryName = (String) classToStringMapping.get(this.visibleEntities.get(listIndex).Clazz);
-            if (this.visibleEntities.get(listIndex).NameOverride != null && !"".equals(this.visibleEntities.get(listIndex).NameOverride)) {
+            if (this.visibleEntities.get(listIndex).NameOverride != null && !"".equals(this.visibleEntities.get(listIndex).NameOverride))
+            {
                 entryName = this.visibleEntities.get(listIndex).NameOverride;
-            } else if (entryName == null || "".equals(entryName)) {
+            }
+            else if (entryName == null || "".equals(entryName))
+            {
                 String[] ModName = this.visibleEntities.get(listIndex).Clazz.getName().split(".");
-                if (ModName != null && ModName.length > 0) {
+                if (ModName != null && ModName.length > 0)
+                {
                     entryName = ModName[ModName.length - 1];
-                } else {
+                }
+                else
+                {
                     entryName = this.visibleEntities.get(listIndex).Clazz.getName();
                 }
             }
-            if (this.visibleEntities.get(listIndex).Clazz == EntityOtherPlayerMP.class) {
+            if (this.visibleEntities.get(listIndex).Clazz == EntityOtherPlayerMP.class)
+            {
                 entryName = "Other Player";
-            } else if (this.visibleEntities.get(listIndex).Clazz == EntityMob.class) {
+            }
+            else if (this.visibleEntities.get(listIndex).Clazz == EntityMob.class)
+            {
                 this.visibleEntities.remove(listIndex);
-            } else if (this.visibleEntities.get(listIndex).Clazz == EntityLivingBase.class) {
+            }
+            else if (this.visibleEntities.get(listIndex).Clazz == EntityLivingBase.class)
+            {
                 this.visibleEntities.remove(listIndex);
-            } else if (this.visibleEntities.get(listIndex).Clazz == EntityLiving.class) {
+            }
+            else if (this.visibleEntities.get(listIndex).Clazz == EntityLiving.class)
+            {
                 this.visibleEntities.remove(listIndex);
             }
             this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(entryName, this.listWidth - 10), this.left + 3, var3 + 2, 16777215);
             String ModName1 = "Vanilla/Unknown Mod";
             EntityRegistry.EntityRegistration er = EntityRegistry.instance().lookupModSpawn(this.visibleEntities.get(listIndex).Clazz, true);
-            if (er != null) {
+            if (er != null)
+            {
                 ModName1 = er.getContainer().getName();
             }
             this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(ModName1, this.listWidth - 10), this.left + 3, var3 + 12, 10066431);
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
         }
     }
 }

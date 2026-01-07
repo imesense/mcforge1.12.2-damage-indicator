@@ -1,60 +1,77 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.core;
 
-import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.netty.buffer.ByteBuf;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-/* loaded from: input.jar:DamageIndicatorsMod/core/DIPotionEffects.class */
-public class DIPotionEffects implements IMessage {
+
+public class DIPotionEffects implements IMessage
+{
     int entityID;
     List<PotionEffect> potionEffects;
 
-    public DIPotionEffects() {
+    public DIPotionEffects()
+    {
         this.entityID = -1;
         this.potionEffects = new ArrayList();
     }
 
-    public DIPotionEffects(EntityLivingBase elb, List<PotionEffect> potionEffects) {
+    public DIPotionEffects(EntityLivingBase elb, List<PotionEffect> potionEffects)
+    {
         this.entityID = -1;
         this.potionEffects = new ArrayList();
         this.entityID = elb.getEntityId();
         this.potionEffects = potionEffects;
     }
 
-    public void fromBytes(ByteBuf buf) {
-        try {
+    public void fromBytes(ByteBuf buf)
+    {
+        try
+        {
             this.entityID = buf.readInt();
             int count = buf.readInt();
             for (int i = 0; i < count; i++) {
                 this.potionEffects.add(new PotionEffect(Potion.getPotionById(buf.readInt()), buf.readInt()));
             }
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex)
+        {
             ex.printStackTrace();
         }
     }
 
-    public void toBytes(ByteBuf buf) {
-        try {
+    public void toBytes(ByteBuf buf)
+    {
+        try
+        {
             buf.writeInt(this.entityID);
             buf.writeInt(this.potionEffects.size());
-            for (int i = 0; i < this.potionEffects.size(); i++) {
+            for (int i = 0; i < this.potionEffects.size(); i++)
+            {
                 buf.writeInt(Potion.getIdFromPotion(this.potionEffects.get(i).getPotion()));
                 buf.writeInt(this.potionEffects.get(i).getDuration());
             }
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex)
+        {
             ex.printStackTrace();
         }
     }
 
-    /* loaded from: input.jar:DamageIndicatorsMod/core/DIPotionEffects$Handler.class */
-    public static class Handler implements IMessageHandler<DIPotionEffects, IMessage> {
-        public DIPotionEffects onMessage(DIPotionEffects message, MessageContext ctx) {
-            if (message.entityID != -1 && !message.potionEffects.isEmpty()) {
+    public static class Handler implements IMessageHandler<DIPotionEffects, IMessage>
+    {
+        public DIPotionEffects onMessage(DIPotionEffects message, MessageContext ctx)
+        {
+            if (message.entityID != -1 && !message.potionEffects.isEmpty())
+            {
                 DIEventBus.potionEffects.put(Integer.valueOf(message.entityID), message.potionEffects);
                 return null;
             }

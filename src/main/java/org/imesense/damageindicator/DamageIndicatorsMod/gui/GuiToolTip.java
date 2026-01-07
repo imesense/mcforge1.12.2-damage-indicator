@@ -1,13 +1,16 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
 import java.awt.Color;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
-/* loaded from: input.jar:DamageIndicatorsMod/gui/GuiToolTip.class */
-public class GuiToolTip extends Gui {
+
+public class GuiToolTip extends Gui
+{
     public int HEIGHT;
     private final AdvancedGui PARENT;
     public String[] stringLines;
@@ -28,7 +31,8 @@ public class GuiToolTip extends Gui {
     public int yPos = 0;
     FontRenderer cfr = Minecraft.getMinecraft().fontRenderer;
 
-    public GuiToolTip(AdvancedGui parentGui, int width, int height) {
+    public GuiToolTip(AdvancedGui parentGui, int width, int height)
+    {
         this.HEIGHT = 128;
         this.WIDTH = 48;
         this.PARENT = parentGui;
@@ -36,35 +40,44 @@ public class GuiToolTip extends Gui {
         this.HEIGHT = height;
     }
 
-    public void drawCenteredStringNoShadow(FontRenderer par1FontRenderer, String par2Str, int par3, int par4, int par5) {
+    public void drawCenteredStringNoShadow(FontRenderer par1FontRenderer, String par2Str, int par3, int par4, int par5)
+    {
         this.cfr.setUnicodeFlag(true);
-        if (((par5 >> 24) & 255) > 16) {
+        if (((par5 >> 24) & 255) > 16)
+        {
             this.cfr.drawString(par2Str, MathHelper.floor(par3 - ((par1FontRenderer.getStringWidth(par2Str) / 2.0f) * 0.75f)) - 8, par4, par5, false);
         }
         this.cfr.setUnicodeFlag(false);
     }
 
-    public void drawStrings(FontRenderer par1FontRenderer) {
+    public void drawStrings(FontRenderer par1FontRenderer)
+    {
         drawStrings(par1FontRenderer, this.xPos, this.yPos);
     }
 
-    public void drawStrings(FontRenderer par1FontRenderer, int x, int y) {
+    public void drawStrings(FontRenderer par1FontRenderer, int x, int y)
+    {
         drawStrings(par1FontRenderer, x, y, this.borderColor, this.gradientStart, this.gradientEnd, this.fontColor);
     }
 
-    public void drawStrings(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, int fontcolor) {
+    public void drawStrings(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, int fontcolor)
+    {
         drawStrings(par1FontRenderer, x, y, border, gradStart, gradEnd, fontcolor, this.stringLines);
     }
 
-    public void drawStrings(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, int font, boolean centered, String[] lines) {
+    public void drawStrings(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, int font, boolean centered, String[] lines)
+    {
         GL11.glDepthFunc(519);
         float[] components = new Color(this.gradientStart).getComponents(new float[4]);
         GL11.glColor4f(components[0], components[1], components[2], components[3]);
-        if (this.useTexture) {
+        if (this.useTexture)
+        {
             int lineNumber = 0 + ((this.iconIndex % 8) * 18);
             int arr$ = 198 + ((this.iconIndex / 8) * 18);
             this.PARENT.drawTexturedModalRect(x, y, lineNumber, arr$, this.WIDTH, this.HEIGHT);
-        } else {
+        }
+        else
+        {
             this.PARENT.drawGradientRect(x, y, x + this.WIDTH, y + this.HEIGHT, gradStart, gradEnd);
             drawRect(x, y, x + this.WIDTH, y + this.borderWidth, border);
             drawRect(x, (y + this.HEIGHT) - this.borderWidth, x + this.WIDTH, y + this.HEIGHT, border);
@@ -72,16 +85,23 @@ public class GuiToolTip extends Gui {
             drawRect((x + this.WIDTH) - this.borderWidth, y, x + this.WIDTH, y + this.HEIGHT, border);
         }
         int lineNumber2 = 0;
-        for (String string : lines) {
+        for (String string : lines)
+        {
             int linecount = lines.length;
             int verticalOffset = MathHelper.floor((this.HEIGHT / 2.0f) - (((linecount * (par1FontRenderer.FONT_HEIGHT + 2.0f)) * 1.0f) / 2.0f));
-            if (centered) {
-                if (this.centerVertically) {
+            if (centered)
+            {
+                if (this.centerVertically)
+                {
                     drawCenteredStringNoShadow(par1FontRenderer, string, x + (this.WIDTH / 2), y + verticalOffset + (lineNumber2 * (par1FontRenderer.FONT_HEIGHT + 2)), font);
-                } else {
+                }
+                else
+                {
                     drawCenteredStringNoShadow(par1FontRenderer, string, x + (this.WIDTH / 2), y + 3 + (lineNumber2 * this.lineSpacing), font);
                 }
-            } else {
+            }
+            else
+            {
                 par1FontRenderer.drawString(string, x + 3, y + 3 + (lineNumber2 * this.lineSpacing), font);
             }
             lineNumber2++;
@@ -90,36 +110,45 @@ public class GuiToolTip extends Gui {
         GL11.glClear(256);
     }
 
-    public void drawStrings(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, int font, String[] lines) {
+    public void drawStrings(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, int font, String[] lines)
+    {
         drawStrings(par1FontRenderer, x, y, border, gradStart, gradEnd, font, this.Centered, lines);
     }
 
-    public void drawStrings(FontRenderer par1FontRenderer, int x, int y, String[] lines) {
+    public void drawStrings(FontRenderer par1FontRenderer, int x, int y, String[] lines)
+    {
         drawStrings(par1FontRenderer, x, y, this.borderColor, this.gradientStart, this.gradientEnd, this.fontColor, lines);
     }
 
-    public void drawStrings(FontRenderer par1FontRenderer, String[] lines) {
+    public void drawStrings(FontRenderer par1FontRenderer, String[] lines)
+    {
         drawStrings(par1FontRenderer, this.xPos, this.yPos, lines);
     }
 
-    public void drawStringsWithDifferentColors(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, boolean centered, String colonDelimetedString, int[] colors) {
+    public void drawStringsWithDifferentColors(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, boolean centered, String colonDelimetedString, int[] colors)
+    {
         drawStringsWithDifferentColors(par1FontRenderer, x, y, border, gradStart, gradEnd, centered, colonDelimetedString.split(":"), colors);
     }
 
-    public void drawStringsWithDifferentColors(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, boolean centered, String[] lines, int[] colors) {
+    public void drawStringsWithDifferentColors(FontRenderer par1FontRenderer, int x, int y, int border, int gradStart, int gradEnd, boolean centered, String[] lines, int[] colors)
+    {
         GL11.glPushMatrix();
         GL11.glTranslatef(0.0f, 0.0f, 1800.0f);
-        if (lines.length != colors.length) {
+        if (lines.length != colors.length)
+        {
             throw new IllegalArgumentException("The number of string lines must be equal to the number of colors passed in");
         }
-        if (this.useTexture) {
+        if (this.useTexture)
+        {
             float[] arr$ = new Color(this.gradientStart).getComponents(new float[4]);
             GL11.glColor4f(arr$[0], arr$[1], arr$[2], arr$[3]);
             int len$ = 0 + ((this.iconIndex % 8) * 18);
             int i$ = 198 + ((this.iconIndex / 8) * 18);
             this.PARENT.drawTexturedModalRect(x, y, len$, i$, this.WIDTH, this.HEIGHT);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        } else {
+        }
+        else
+        {
             this.PARENT.drawGradientRect(x, y, this.WIDTH, this.HEIGHT, gradStart, gradEnd);
             drawRect(x, y, x + this.WIDTH, y + this.borderWidth, border);
             drawRect(x, (y + this.HEIGHT) - this.borderWidth, x + this.WIDTH, y + this.HEIGHT, border);
@@ -127,16 +156,23 @@ public class GuiToolTip extends Gui {
             drawRect((x + this.WIDTH) - this.borderWidth, y, x + this.WIDTH, y + this.HEIGHT, border);
         }
         int var18 = 0;
-        for (String string : lines) {
+        for (String string : lines)
+        {
             int linecount = lines.length;
             int verticalSpacing = MathHelper.floor(this.HEIGHT / (linecount + 1));
-            if (centered) {
-                if (this.centerVertically) {
+            if (centered)
+            {
+                if (this.centerVertically)
+                {
                     drawCenteredString(par1FontRenderer, string, x + (this.WIDTH / 2), (y + (verticalSpacing * var18)) - (par1FontRenderer.FONT_HEIGHT / 2), colors[var18]);
-                } else {
+                }
+                else
+                {
                     drawCenteredString(par1FontRenderer, string, x + (this.WIDTH / 2), y + 3 + (var18 * this.lineSpacing), colors[var18]);
                 }
-            } else {
+            }
+            else
+            {
                 drawString(par1FontRenderer, string, x + 3, y + 3 + (var18 * this.lineSpacing), colors[var18]);
             }
             var18++;
@@ -144,55 +180,67 @@ public class GuiToolTip extends Gui {
         GL11.glPopMatrix();
     }
 
-    public static void addVertexWithUV(double x, double y, double z, double u, double v) {
+    public static void addVertexWithUV(double x, double y, double z, double u, double v)
+    {
         GL11.glTexCoord2d(u, v);
         GL11.glVertex3d(x, y, z);
     }
 
-    public static void addVertex(double x, double y, double z) {
+    public static void addVertex(double x, double y, double z)
+    {
         GL11.glVertex3d(x, y, z);
     }
 
-    public void drawStringsWithDifferentColors(FontRenderer par1FontRenderer, int[] colors) {
+    public void drawStringsWithDifferentColors(FontRenderer par1FontRenderer, int[] colors)
+    {
         drawStringsWithDifferentColors(par1FontRenderer, this.xPos, this.yPos, this.borderColor, this.gradientStart, this.gradientEnd, this.Centered, this.stringLines, colors);
     }
 
-    public boolean isCentered() {
+    public boolean isCentered()
+    {
         return this.Centered;
     }
 
-    public boolean isCenterVertically() {
+    public boolean isCenterVertically()
+    {
         return this.centerVertically;
     }
 
-    public boolean isUsingTexture() {
+    public boolean isUsingTexture()
+    {
         return this.useTexture;
     }
 
-    public void setBasicColors(int border, int gradStart, int gradEnd, int font) {
+    public void setBasicColors(int border, int gradStart, int gradEnd, int font)
+    {
         this.borderColor = border;
         this.gradientStart = gradStart;
         this.gradientEnd = gradEnd;
         this.fontColor = font;
     }
 
-    public void setBorderWidth(int borderWidth) {
+    public void setBorderWidth(int borderWidth)
+    {
         this.borderWidth = borderWidth;
     }
 
-    public void setCentered(boolean Centered) {
+    public void setCentered(boolean Centered)
+    {
         this.Centered = Centered;
     }
 
-    public void setCenterVertically(boolean centerVertically) {
+    public void setCenterVertically(boolean centerVertically)
+    {
         this.centerVertically = centerVertically;
     }
 
-    public void setDontUseTexture() {
+    public void setDontUseTexture()
+    {
         this.useTexture = false;
     }
 
-    public void setGlobalAlpha(float trans) {
+    public void setGlobalAlpha(float trans)
+    {
         this.alpha = trans > 0.0f ? trans > 1.0f ? 1.0f : trans : 0.0f;
         Color color = new Color(this.borderColor);
         float[] temp = color.getColorComponents(new float[3]);
@@ -212,50 +260,61 @@ public class GuiToolTip extends Gui {
         this.fontColor = color8.getRGB();
     }
 
-    public void setGlobalAlpha(int trans) {
+    public void setGlobalAlpha(int trans)
+    {
         setGlobalAlpha(((trans > 0 ? trans > 255 ? 255 : trans : 0) / 255.0f) * 1.0f);
     }
 
-    public void setLineSpacing(int lineSpacing) {
+    public void setLineSpacing(int lineSpacing)
+    {
         this.lineSpacing = lineSpacing;
     }
 
-    public void setPos(int xPos, int yPos) {
+    public void setPos(int xPos, int yPos)
+    {
         this.xPos = xPos;
         this.yPos = yPos;
     }
 
-    public void setStringLines(String[] stringLines) {
+    public void setStringLines(String[] stringLines)
+    {
         this.stringLines = stringLines;
     }
 
-    public void setTextLines(String[] lines) {
+    public void setTextLines(String[] lines)
+    {
         this.stringLines = lines;
     }
 
-    public void setTextureFile(String TextureFile, int iconIndex) {
+    public void setTextureFile(String TextureFile, int iconIndex)
+    {
         this.TextureFile = TextureFile;
         this.iconIndex = iconIndex;
         this.useTexture = true;
     }
 
-    public void setUpForDraw(int x, int y) {
+    public void setUpForDraw(int x, int y)
+    {
         setUpForDraw(x, y, this.borderColor, this.gradientStart, this.gradientEnd, this.fontColor, this.Centered, this.centerVertically);
     }
 
-    public void setUpForDraw(int x, int y, int borderColor, int baseColor, int gradEndColor, int defaultFontColor, boolean centeredHorizontally, boolean centeredVerTically) {
+    public void setUpForDraw(int x, int y, int borderColor, int baseColor, int gradEndColor, int defaultFontColor, boolean centeredHorizontally, boolean centeredVerTically)
+    {
         setUpForDraw(x, y, borderColor, baseColor, gradEndColor, defaultFontColor, centeredHorizontally, centeredVerTically, this.WIDTH, this.HEIGHT);
     }
 
-    public void setUpForDraw(int x, int y, int borderColor, int baseColor, int gradEndColor, int defaultFontColor, boolean centeredHorizontally, boolean centeredVerTically, int newWidth, int newHeight) {
+    public void setUpForDraw(int x, int y, int borderColor, int baseColor, int gradEndColor, int defaultFontColor, boolean centeredHorizontally, boolean centeredVerTically, int newWidth, int newHeight)
+    {
         setUpForDraw(x, y, borderColor, baseColor, gradEndColor, defaultFontColor, centeredHorizontally, centeredVerTically, newWidth, newHeight, this.TextureFile, this.iconIndex);
     }
 
-    public void setUpForDraw(int x, int y, int borderColor, int baseColor, int gradEndColor, int defaultFontColor, boolean centeredHorizontally, boolean centeredVertically, int newWidth, int newHeight, String texture, int iconIndex) {
+    public void setUpForDraw(int x, int y, int borderColor, int baseColor, int gradEndColor, int defaultFontColor, boolean centeredHorizontally, boolean centeredVertically, int newWidth, int newHeight, String texture, int iconIndex)
+    {
         setUpForDraw(x, y, borderColor, baseColor, gradEndColor, defaultFontColor, centeredHorizontally, centeredVertically, newWidth, newHeight, texture, iconIndex, this.stringLines);
     }
 
-    public void setUpForDraw(int x, int y, int borderColor, int baseColor, int gradEndColor, int defaultFontColor, boolean centeredHorizontally, boolean centeredVertically, int newWidth, int newHeight, String texture, int iconIndex, String[] lines) {
+    public void setUpForDraw(int x, int y, int borderColor, int baseColor, int gradEndColor, int defaultFontColor, boolean centeredHorizontally, boolean centeredVertically, int newWidth, int newHeight, String texture, int iconIndex, String[] lines)
+    {
         this.xPos = x;
         this.yPos = y;
         this.borderColor = borderColor;
@@ -267,14 +326,18 @@ public class GuiToolTip extends Gui {
         this.WIDTH = newWidth;
         this.HEIGHT = newHeight;
         this.stringLines = lines;
-        if (texture != null && !"".equals(texture)) {
+        if (texture != null && !"".equals(texture))
+        {
             setTextureFile(texture, iconIndex);
-        } else {
+        }
+        else
+        {
             setDontUseTexture();
         }
     }
 
-    public void setUpForDraw(int x, int y, String[] lines) {
+    public void setUpForDraw(int x, int y, String[] lines)
+    {
         this.stringLines = lines;
         setUpForDraw(x, y, this.borderColor, this.gradientStart, this.gradientEnd, this.fontColor, this.Centered, this.centerVertically);
     }

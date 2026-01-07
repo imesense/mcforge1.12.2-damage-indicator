@@ -1,7 +1,5 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.core;
 
-import org.imesense.damageindicator.DamageIndicatorMod;
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -10,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
@@ -17,31 +16,38 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-/* loaded from: input.jar:DamageIndicatorsMod/core/Tools.class */
-public class Tools {
+
+import org.imesense.damageindicator.DamageIndicatorMod;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+
+public class Tools
+{
     private static HashMap<Class, EntityConfigurationEntry> entityMap = new HashMap<>();
     public static int timeTillFlush = 500;
     private static Tools instance;
 
-    /* renamed from: mc */
-    private Minecraft f1mc = Minecraft.getMinecraft();
+    private Minecraft mc = Minecraft.getMinecraft();
     public List<Object[]> unloadedEntities = new ArrayList();
     boolean lasttimefailed = false;
 
-    public static Tools getInstance() {
-        if (instance == null) {
+    public static Tools getInstance()
+    {
+        if (instance == null)
+        {
             instance = new Tools();
         }
         return instance;
     }
 
-    public void checkIfLoaded() {
+    public void checkIfLoaded()
+    {
     }
 
-    public BufferedImage doFilter(BufferedImage src) throws OutOfMemoryError, Throwable {
+    public BufferedImage doFilter(BufferedImage src) throws OutOfMemoryError, Throwable
+    {
         int upScaleDim = MathHelper.floor(src.getWidth() * DIConfig.ScaleFilter);
         BufferedImage dst = new BufferedImage(upScaleDim, upScaleDim, src.getType());
         AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(DIConfig.ScaleFilter, DIConfig.ScaleFilter), DIConfig.hints);
@@ -49,54 +55,71 @@ public class Tools {
         return dst;
     }
 
-    public HashMap<Class, EntityConfigurationEntry> getEntityMap() {
-        if (entityMap.isEmpty()) {
+    public HashMap<Class, EntityConfigurationEntry> getEntityMap()
+    {
+        if (entityMap.isEmpty())
+        {
             scanforEntities();
         }
         return entityMap;
     }
 
-    public void giveUpdateInformation() {
-        if (DamageIndicatorMod.s_sUpdateMessage == null) {
+    public void giveUpdateInformation()
+    {
+        if (DamageIndicatorMod.s_sUpdateMessage == null)
+        {
             DamageIndicatorMod.s_sUpdateMessage = "Damage Indicators was unable to check for updates.";
         }
-        if (!"".equals(DamageIndicatorMod.s_sUpdateMessage) && this.f1mc.player != null) {
+        if (!"".equals(DamageIndicatorMod.s_sUpdateMessage) && this.mc.player != null)
+        {
             DamageIndicatorMod.s_sUpdateMessage = "";
         }
     }
 
-    public void registerCommands() {
+    public void registerCommands()
+    {
     }
 
-    public void RegisterRenders() {
+    public void RegisterRenders()
+    {
         scanforEntities();
         MinecraftForge.EVENT_BUS.register(DITicker.instance);
     }
 
-    public static Map<Class<? extends Entity>, String> getEntityList() {
+    public static Map<Class<? extends Entity>, String> getEntityList()
+    {
         Map<Class<? extends Entity>, String> ret = new HashMap<>();
-        for (ResourceLocation rl : EntityList.getEntityNameList()) {
+        for (ResourceLocation rl : EntityList.getEntityNameList())
+        {
             ret.put(EntityList.getClass(rl), EntityList.getTranslationName(rl));
         }
         ret.put(EntityOtherPlayerMP.class, "OtherPlayers");
         return ret;
     }
 
-    public void scanforEntities() {
+    public void scanforEntities()
+    {
         searchMapForEntities(getEntityList());
     }
 
-    private void searchMapForEntities(Map theMap) {
+    private void searchMapForEntities(Map theMap)
+    {
         Configuration config = EntityConfigurationEntry.getEntityConfiguration();
         this.lasttimefailed = false;
         Set<Class> set = theMap.keySet();
-        for (Class entry : set) {
-            if (entry != null) {
-                try {
-                    if (EntityLiving.class.isAssignableFrom(entry)) {
+        for (Class entry : set)
+        {
+            if (entry != null)
+            {
+                try
+                {
+                    if (EntityLiving.class.isAssignableFrom(entry))
+                    {
                         entityMap.put(entry, EntityConfigurationEntry.generateDefaultConfiguration(config, entry));
                     }
-                } catch (Throwable th) {
+                }
+                catch (Throwable th)
+                {
                 }
             }
         }

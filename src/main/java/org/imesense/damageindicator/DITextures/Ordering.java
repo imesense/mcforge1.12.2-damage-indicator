@@ -1,6 +1,7 @@
 package org.imesense.damageindicator.DITextures;
-/* loaded from: input.jar:DITextures/Ordering.class */
-public enum Ordering {
+
+public enum Ordering
+{
     BACKGROUND,
     MOBPREVIEW,
     NAMEPLATE,

@@ -1,45 +1,56 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
-import org.imesense.damageindicator.DITextures.AbstractSkin;
-import org.imesense.damageindicator.DITextures.EnumSkinPart;
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.GameSettings;
-import org.lwjgl.opengl.GL11;
-/* loaded from: input.jar:DamageIndicatorsMod/gui/SkinGui.class */
-public class SkinGui extends GuiScreen {
+
+import org.imesense.damageindicator.DITextures.AbstractSkin;
+import org.imesense.damageindicator.DITextures.EnumSkinPart;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+
+public class SkinGui extends GuiScreen
+{
     private SkinSlot SkinSlot;
     DIConfig diConfig;
 
-    public SkinGui(GuiScreen par1, GameSettings par2) {
+    public SkinGui(GuiScreen par1, GameSettings par2)
+    {
     }
 
-    public void initGui() {
+    public void initGui()
+    {
         this.SkinSlot = new SkinSlot(this);
         this.buttonList.add(new GuiButton(1, this.width - 24, 4, 20, 20, "X"));
     }
 
-    protected void actionPerformed(GuiButton par1GuiButton) {
+    protected void actionPerformed(GuiButton par1GuiButton)
+    {
         Minecraft.getMinecraft().displayGuiScreen(new RepositionGui());
     }
 
-    public void onGuiClosed() {
+    public void onGuiClosed()
+    {
         RepositionGui rp = new RepositionGui();
         rp.onGuiClosed();
     }
 
-    public void drawDefaultBackground() {
+    public void drawDefaultBackground()
+    {
     }
 
-    protected void drawBackground() {
+    protected void drawBackground()
+    {
     }
 
-    public void drawBackground(int par1) {
+    public void drawBackground(int par1)
+    {
     }
 
-    public void drawScreen(int par1, int par2, float par3) {
+    public void drawScreen(int par1, int par2, float par3)
+    {
         this.SkinSlot.drawScreen(par1, par2, par3);
         super.drawScreen(par1, par2, par3);
         GL11.glPushAttrib(278529);

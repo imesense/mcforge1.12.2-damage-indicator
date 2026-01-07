@@ -1,6 +1,7 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.rendering;
 
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.particle.Particle;
@@ -10,12 +11,15 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+
 @SideOnly(Side.CLIENT)
-/* loaded from: input.jar:DamageIndicatorsMod/rendering/DIWordParticles.class */
-public class DIWordParticles extends Particle {
+public class DIWordParticles extends Particle
+{
     private String critical;
     public boolean criticalhit;
     public static DynamicTexture texID;
@@ -24,17 +28,11 @@ public class DIWordParticles extends Particle {
     boolean heal;
     boolean grow;
 
-    /* renamed from: ul */
     float f4ul;
-
-    /* renamed from: ur */
     float f5ur;
-
-    /* renamed from: vl */
     float f6vl;
-
-    /* renamed from: vr */
     float f7vr;
+
     float locX;
     float locY;
     float locZ;
@@ -48,13 +46,15 @@ public class DIWordParticles extends Particle {
     FontRenderer fontRenderer;
     public static boolean isOptifinePresent = false;
 
-    public DIWordParticles(World par1World, double par2, double par4, double par6, double par8, double par10, double par12) {
+    public DIWordParticles(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
+    {
         this(par1World, par2, par4, par6, par8, par10, par12, 0);
         this.criticalhit = true;
         this.particleGravity = -0.05f;
     }
 
-    public DIWordParticles(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, int damage) {
+    public DIWordParticles(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, int damage)
+    {
         super(par1World, par2, par4, par6, par8, par10, par12);
         this.critical = "Critical!";
         this.criticalhit = false;
@@ -78,11 +78,13 @@ public class DIWordParticles extends Particle {
         this.particleScale = DIConfig.Size;
         this.particleMaxAge = DIConfig.Lifespan;
         this.particleAge = 0;
-        if (this.Damage < 0) {
+        if (this.Damage < 0)
+        {
             this.heal = true;
             this.Damage = Math.abs(this.Damage);
         }
-        try {
+        try
+        {
             int baseColor = this.heal ? DIConfig.healColor : DIConfig.DIColor;
             this.red = ((baseColor >> 16) & 255) / 255.0f;
             this.green = ((baseColor >> 8) & 255) / 255.0f;
@@ -92,20 +94,25 @@ public class DIWordParticles extends Particle {
             this.f5ur = this.f4ul + 0.0624375f;
             this.f6vl = ((MathHelper.floor(this.Damage / 16.0f) * 16.0f) / 16.0f) / 16.0f;
             this.f7vr = this.f6vl + 0.0624375f;
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
         }
     }
 
-    public void move(double x, double y, double z) {
+    public void move(double x, double y, double z)
+    {
         super.move(x, y, z);
     }
 
-    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
+    {
         this.shouldOnTop = Minecraft.getMinecraft().player.canEntityBeSeen(entityIn);
         double rotationYaw = -Minecraft.getMinecraft().player.rotationYaw;
         double rotationPitch = Minecraft.getMinecraft().player.rotationPitch;
         float size = 0.1f * this.particleScale;
-        try {
+        try
+        {
             this.locX = (float) ((this.prevPosX + ((this.posX - this.prevPosX) * partialTicks)) - interpPosX);
             this.locY = (float) ((this.prevPosY + ((this.posY - this.prevPosY) * partialTicks)) - interpPosY);
             this.locZ = (float) ((this.prevPosZ + ((this.posZ - this.prevPosZ) * partialTicks)) - interpPosZ);
@@ -114,12 +121,17 @@ public class DIWordParticles extends Particle {
             float f3 = rotationYZ * size;
             float f4 = rotationXY * size;
             float f5 = rotationXZ * size;
-        } catch (Throwable th) {
+        }
+        catch (Throwable th)
+        {
         }
         GL11.glPushMatrix();
-        if (this.shouldOnTop) {
+        if (this.shouldOnTop)
+        {
             GL11.glDepthFunc(519);
-        } else {
+        }
+        else
+        {
             GL11.glDepthFunc(515);
         }
         GL11.glTranslatef(this.locX, this.locY, this.locZ);
@@ -127,7 +139,8 @@ public class DIWordParticles extends Particle {
         GL11.glRotated(rotationPitch, 1.0d, 0.0d, 0.0d);
         GL11.glScalef(-1.0f, -1.0f, 1.0f);
         GL11.glScaled(this.particleScale * 0.008d, this.particleScale * 0.008d, this.particleScale * 0.008d);
-        if (this.criticalhit) {
+        if (this.criticalhit)
+        {
             GL11.glScaled(0.5d, 0.5d, 0.5d);
         }
         this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
@@ -143,18 +156,23 @@ public class DIWordParticles extends Particle {
         GL11.glEnable(3042);
         GL11.glEnable(3008);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        if (this.criticalhit && DIConfig.showCriticalStrikes) {
+        if (this.criticalhit && DIConfig.showCriticalStrikes)
+        {
             renderText(this.critical, this.fontRenderer.getStringWidth(this.critical) / (-2.0f), this.fontRenderer.FONT_HEIGHT / (-2.0f), 204, 0, 0);
-        } else if (!this.criticalhit) {
+        }
+        else if (!this.criticalhit)
+        {
             int color = this.heal ? DIConfig.healColor : DIConfig.DIColor;
             renderText(String.valueOf(this.Damage), this.fontRenderer.getStringWidth(this.Damage + "") / (-2.0f), this.fontRenderer.FONT_HEIGHT / (-2.0f), (color >> 16) & 255, (color >> 8) & 255, (color >> 0) & 255);
         }
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         GL11.glDepthFunc(515);
         GL11.glPopMatrix();
-        if (this.grow) {
+        if (this.grow)
+        {
             this.particleScale *= 1.08f;
-            if (this.particleScale > DIConfig.Size * 3.0d) {
+            if (this.particleScale > DIConfig.Size * 3.0d)
+            {
                 this.grow = false;
                 return;
             }
@@ -163,20 +181,27 @@ public class DIWordParticles extends Particle {
         this.particleScale *= 0.96f;
     }
 
-    public void renderText(String str, float posX, float posY, int red, int green, int blue) {
-        if (DIConfig.useDropShadows) {
+    public void renderText(String str, float posX, float posY, int red, int green, int blue)
+    {
+        if (DIConfig.useDropShadows)
+        {
             int r = red;
             int g = green;
             int b = blue;
-            if (red > green && red > blue) {
+            if (red > green && red > blue)
+            {
                 r = 255;
                 g = 0;
                 b = 0;
-            } else if (green > red && green > blue) {
+            }
+            else if (green > red && green > blue)
+            {
                 r = 0;
                 g = 255;
                 b = 0;
-            } else if (blue > red && blue > green) {
+            }
+            else if (blue > red && blue > green)
+            {
                 r = 0;
                 g = 0;
                 b = 255;
@@ -193,13 +218,16 @@ public class DIWordParticles extends Particle {
             GL11.glScaled(0.95d, 0.95d, 1.0d);
             this.fontRenderer.drawString(str, 0, 0, ((((int) (this.alpha * 255.0d)) & 255) << 24) | ((red & 255) << 16) | ((green & 255) << 8) | ((blue & 255) << 0));
             GL11.glPopMatrix();
-        } else {
+        }
+        else
+        {
             this.fontRenderer.drawString(str, 0, 0, ((((int) (this.alpha * 255.0d)) & 255) << 24) | ((red & 255) << 16) | ((green & 255) << 8) | ((blue & 255) << 0));
         }
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public int getFXLayer() {
+    public int getFXLayer()
+    {
         return 3;
     }
 }

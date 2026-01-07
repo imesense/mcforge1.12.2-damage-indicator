@@ -1,11 +1,5 @@
 package org.imesense.damageindicator.DamageIndicatorsMod.gui;
 
-import org.imesense.damageindicator.DITextures.AbstractSkin;
-import org.imesense.damageindicator.DITextures.EnumSkinPart;
-import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
-import org.imesense.damageindicator.DamageIndicatorsMod.core.EntityConfigurationEntry;
-import org.imesense.damageindicator.DamageIndicatorsMod.core.Tools;
-import org.imesense.damageindicator.DamageIndicatorsMod.util.EntityConfigurationEntryComparator;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,9 +20,16 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
-/* loaded from: input.jar:DamageIndicatorsMod/gui/AdvancedGui.class */
-public class AdvancedGui extends GuiScreen {
+
+import org.imesense.damageindicator.DITextures.AbstractSkin;
+import org.imesense.damageindicator.DITextures.EnumSkinPart;
+import org.imesense.damageindicator.DamageIndicatorsMod.configuration.DIConfig;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.EntityConfigurationEntry;
+import org.imesense.damageindicator.DamageIndicatorsMod.core.Tools;
+import org.imesense.damageindicator.DamageIndicatorsMod.util.EntityConfigurationEntryComparator;
+
+public class AdvancedGui extends GuiScreen
+{
     private GuiEntityList guiEntityList;
     private GuiToolTip tooltip;
     private GuiTextField search;
@@ -46,31 +50,36 @@ public class AdvancedGui extends GuiScreen {
     private long lasttime = 0;
     public boolean backwards = false;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6) {
+    public void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6)
+    {
         super.drawGradientRect(par1, par2, par3, par4, par5, par6);
     }
 
-    public void onGuiClosed() {
+    public void onGuiClosed()
+    {
         super.onGuiClosed();
         DIConfig.popOffsEnabled = this.popoffsetting;
         DIConfig.portraitEnabled = this.portraitsetting;
     }
 
-    public boolean doesGuiPauseGame() {
+    public boolean doesGuiPauseGame()
+    {
         return true;
     }
 
-    public void initGui() {
+    public void initGui()
+    {
         this.popoffsetting = DIConfig.popOffsEnabled;
         this.portraitsetting = DIConfig.portraitEnabled;
         DIConfig.popOffsEnabled = false;
         DIConfig.portraitEnabled = false;
         GuiEntityList.entities = new ArrayList(Tools.getInstance().getEntityMap().values());
         Iterator<EntityConfigurationEntry> it = GuiEntityList.entities.iterator();
-        while (it.hasNext()) {
+        while (it.hasNext())
+        {
             EntityConfigurationEntry ece = it.next();
-            if (EntityPlayer.class.isAssignableFrom(ece.Clazz)) {
+            if (EntityPlayer.class.isAssignableFrom(ece.Clazz))
+            {
                 it.remove();
             }
         }
@@ -86,60 +95,79 @@ public class AdvancedGui extends GuiScreen {
         super.initGui();
     }
 
-    protected void mouseClicked(int par1, int par2, int par3) throws IOException {
-        for (GuiTextField gtf : this.textboxes) {
+    protected void mouseClicked(int par1, int par2, int par3) throws IOException
+    {
+        for (GuiTextField gtf : this.textboxes)
+        {
             gtf.mouseClicked(par1, par2, par3);
         }
         this.search.mouseClicked(par1, par2, par3);
-        if (this.search.isFocused()) {
-            if ("Search...".equals(this.search.getText())) {
+        if (this.search.isFocused())
+        {
+            if ("Search...".equals(this.search.getText()))
+            {
                 this.search.setText("");
             }
-        } else if ("".equals(this.search.getText())) {
+        }
+        else if ("".equals(this.search.getText()))
+        {
             this.search.setText("Search...");
         }
         super.mouseClicked(par1, par2, par3);
     }
 
-    protected void keyTyped(char par1, int par2) throws IOException {
-        for (GuiTextField ec : this.textboxes) {
+    protected void keyTyped(char par1, int par2) throws IOException
+    {
+        for (GuiTextField ec : this.textboxes)
+        {
             ec.textboxKeyTyped(par1, par2);
         }
-        if (this.search.isFocused()) {
+        if (this.search.isFocused())
+        {
             this.guiEntityList.visibleEntities.clear();
             this.search.textboxKeyTyped(par1, par2);
-            if (!"".equals(this.search.getText())) {
+            if (!"".equals(this.search.getText()))
+            {
                 this.entrySelected = false;
                 this.guiEntityList.selectedEntry = 0;
-                for (EntityConfigurationEntry ec1 : GuiEntityList.entities) {
+                for (EntityConfigurationEntry ec1 : GuiEntityList.entities)
+                {
                     Map classToStringMapping = Tools.getEntityList();
                     // Проверка по имени класса
-                    if (ec1.Clazz.getName().toLowerCase().contains(this.search.getText().toLowerCase())) {
+                    if (ec1.Clazz.getName().toLowerCase().contains(this.search.getText().toLowerCase()))
+                    {
                         this.guiEntityList.visibleEntities.add(ec1);
                     }
                     // Проверка по отображаемому имени из маппинга
-                    else if (classToStringMapping.containsKey(ec1.Clazz)) {
+                    else if (classToStringMapping.containsKey(ec1.Clazz))
+                    {
                         Object value = classToStringMapping.get(ec1.Clazz);
-                        if (value instanceof String) {
+                        if (value instanceof String)
+                        {
                             String temp = ((String) value).toLowerCase();
-                            if (temp.contains(this.search.getText().toLowerCase())) {
+                            if (temp.contains(this.search.getText().toLowerCase()))
+                            {
                                 this.guiEntityList.visibleEntities.add(ec1);
                             }
                         }
                     }
                     // Проверка по кастомному имени
-                    else if (ec1.NameOverride != null && ec1.NameOverride.toLowerCase().contains(this.search.getText().toLowerCase())) {
+                    else if (ec1.NameOverride != null && ec1.NameOverride.toLowerCase().contains(this.search.getText().toLowerCase()))
+                    {
                         this.guiEntityList.visibleEntities.add(ec1);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 this.guiEntityList.visibleEntities.addAll(GuiEntityList.entities);
             }
         }
         super.keyTyped(par1, par2);
     }
 
-    public void createTooltips() {
+    public void createTooltips()
+    {
         this.controlLocations.clear();
         this.controlTooltipText.clear();
         this.controlLocations.add(new Rectangle(220 - this.fontRenderer.getStringWidth("Scale Factor"), 32, this.fontRenderer.getStringWidth("Scale Factor"), this.fontRenderer.FONT_HEIGHT));
@@ -176,13 +204,16 @@ public class AdvancedGui extends GuiScreen {
         this.controlTooltipText.add(new String[]{"To make babies bigger in portrait."});
         this.controlLocations.add(new Rectangle(32, 32, 120, this.height - 64));
         this.controlTooltipText.add(new String[]{"Detected Entities. Click to configure."});
-        for (int i = 0; i < this.controlLocations.size(); i++) {
+        for (int i = 0; i < this.controlLocations.size(); i++)
+        {
             this.controlTooltipText.set(i, (String[]) this.fontRenderer.listFormattedStringToWidth(this.controlTooltipText.get(i)[0], this.tooltipWidth - 2).toArray());
         }
     }
 
-    public void func_73863_a(int par1, int par2, float par3) {
-        if (this.lasttime == 0) {
+    public void func_73863_a(int par1, int par2, float par3)
+    {
+        if (this.lasttime == 0)
+        {
             this.lasttime = System.nanoTime();
         }
         double diff = (System.nanoTime() - this.lasttime) / 1000000.0d;
@@ -191,19 +222,28 @@ public class AdvancedGui extends GuiScreen {
         this.guiEntityList.drawScreen(par1, par2, par3);
         boolean found = false;
         this.search.drawTextBox();
-        if (this.entrySelected) {
-            if ((this.guiEntityList.visibleEntities.size() > 0 || this.guiEntityList.visibleEntities.get(this.selectedEntry) != null) && (this.ece == null || this.ece != this.guiEntityList.visibleEntities.get(this.selectedEntry))) {
+        if (this.entrySelected)
+        {
+            if ((this.guiEntityList.visibleEntities.size() > 0 || this.guiEntityList.visibleEntities.get(this.selectedEntry) != null) && (this.ece == null || this.ece != this.guiEntityList.visibleEntities.get(this.selectedEntry)))
+            {
                 this.ece = this.guiEntityList.visibleEntities.get(this.selectedEntry);
-                try {
-                    if (this.tempMob != null) {
+                try
+                {
+                    if (this.tempMob != null)
+                    {
                         this.tempMob.setDead();
                     }
-                    try {
+                    try
+                    {
                         this.tempMob = (EntityLivingBase) this.ece.Clazz.getConstructor(World.class).newInstance(this.mc.world);
-                    } catch (InstantiationException e) {
+                    }
+                    catch (InstantiationException e)
+                    {
                         this.tempMob = null;
                     }
-                } catch (Throwable var11) {
+                }
+                catch (Throwable var11)
+                {
                     Logger.getLogger(AdvancedGui.class.getName()).log(Level.SEVERE, (String) null, var11);
                 }
             }
@@ -215,19 +255,25 @@ public class AdvancedGui extends GuiScreen {
             this.fontRenderer.drawStringWithShadow("Name Override:", 220 - this.fontRenderer.getStringWidth("Name Override"), 144.0f, 16777215);
             this.fontRenderer.drawStringWithShadow("Full Class Name:", 220 - this.fontRenderer.getStringWidth("Full Class Name"), 160.0f, 16777215);
             this.fontRenderer.drawStringWithShadow(this.guiEntityList.visibleEntities.get(this.selectedEntry).Clazz.getName(), 225.0f, 160.0f, 10066431);
-            for (GuiTextField transparency : this.textboxes) {
+            for (GuiTextField transparency : this.textboxes)
+            {
                 transparency.drawTextBox();
             }
             GL11.glPushMatrix();
-            if (this.ece == null) {
+            if (this.ece == null)
+            {
                 this.ece = this.guiEntityList.visibleEntities.get(this.selectedEntry);
             }
             String var14 = this.ece.NameOverride;
-            if (this.tempMob != null) {
-                if (var14 == null || "".equals(var14)) {
+            if (this.tempMob != null)
+            {
+                if (var14 == null || "".equals(var14))
+                {
                     var14 = this.tempMob.getName();
                 }
-            } else if (var14 == null || "".equals(var14)) {
+            }
+            else if (var14 == null || "".equals(var14))
+            {
                 Map classToStringMapping = Tools.getEntityList();
                 var14 = classToStringMapping.containsKey(this.ece.Clazz) ? classToStringMapping.get(this.ece.Clazz).toString() : this.ece.Clazz.getName().substring(this.ece.Clazz.getName().lastIndexOf(".") + 1);
             }
@@ -235,7 +281,8 @@ public class AdvancedGui extends GuiScreen {
             GL11.glPushMatrix();
             float var16 = DIConfig.guiScale;
             GL11.glPushAttrib(8192);
-            try {
+            try
+            {
                 float headPosY = 175.0f + ((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGMOBPREVIEWY)).intValue() + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGBACKGROUNDHEIGHT)).intValue() / 2.0f);
                 float headPosX = par1 - (150.0f + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGMOBPREVIEWX)).intValue() + (((Integer) AbstractSkin.getActiveSkin().getSkinValue(EnumSkinPart.CONFIGBACKGROUNDWIDTH)).intValue() / 2.0f)));
                 float headPosY2 = par2 - headPosY;
@@ -256,7 +303,9 @@ public class AdvancedGui extends GuiScreen {
                 this.tempMob.rotationPitch = f4;
                 this.tempMob.prevRotationYawHead = f5;
                 this.tempMob.rotationYawHead = f6;
-            } catch (Throwable th) {
+            }
+            catch (Throwable th)
+            {
             }
             GL11.glPopAttrib();
             this.zLevel += 0.1f;
@@ -264,22 +313,31 @@ public class AdvancedGui extends GuiScreen {
             GL11.glPopMatrix();
             super.drawScreen(par1, par2, par3);
             GL11.glPopMatrix();
-            try {
-                if (this.controlLocations != null) {
-                    for (int lines = 0; lines < this.controlLocations.size(); lines++) {
-                        if (this.controlLocations.get(lines).contains(par1, par2)) {
+            try
+            {
+                if (this.controlLocations != null)
+                {
+                    for (int lines = 0; lines < this.controlLocations.size(); lines++)
+                    {
+                        if (this.controlLocations.get(lines).contains(par1, par2))
+                        {
                             found = true;
                             int ex = 0;
-                            if (this.controlLocations.get(lines) != null && (this.LastHovered == null || this.LastHovered != this.controlLocations.get(lines))) {
+                            if (this.controlLocations.get(lines) != null && (this.LastHovered == null || this.LastHovered != this.controlLocations.get(lines)))
+                            {
                                 this.LastHovered = this.controlLocations.get(lines);
                                 this.timeHovered = 1;
                             }
-                            if (this.timeHovered != 0) {
+                            if (this.timeHovered != 0)
+                            {
                                 this.timeHovered += MathHelper.floor(diff);
-                                if (this.timeHovered > 255) {
+                                if (this.timeHovered > 255)
+                                {
                                     this.timeHovered = -2000;
                                     this.backwards = true;
-                                } else if (this.backwards && this.timeHovered > 0) {
+                                }
+                                else if (this.backwards && this.timeHovered > 0)
+                                {
                                     this.backwards = false;
                                     this.timeHovered = 0;
                                 }
@@ -294,40 +352,55 @@ public class AdvancedGui extends GuiScreen {
                         }
                     }
                 }
-            } catch (Throwable th2) {
+            }
+            catch (Throwable th2)
+            {
             }
         }
-        if (!found) {
+        if (!found)
+        {
             this.LastHovered = null;
             this.timeHovered = 0;
         }
     }
 
-    public void updateScreen() {
+    public void updateScreen()
+    {
         this.search.updateCursorCounter();
-        for (GuiTextField gtf : this.textboxes) {
+        for (GuiTextField gtf : this.textboxes)
+        {
             gtf.updateCursorCounter();
         }
         super.updateScreen();
     }
 
-    protected void actionPerformed(GuiButton par1GuiButton) throws IOException {
+    protected void actionPerformed(GuiButton par1GuiButton) throws IOException
+    {
         EntityConfigurationEntry current = this.guiEntityList.visibleEntities.get(this.selectedEntry);
-        if (par1GuiButton instanceof GuiCheckBox) {
+        if (par1GuiButton instanceof GuiCheckBox)
+        {
             ((GuiCheckBox) par1GuiButton).toggle();
-        } else if (par1GuiButton != null) {
-            for (GuiTextField textbox : this.textboxes) {
-                if (textbox != this.textboxes.get(5)) {
-                    try {
+        }
+        else if (par1GuiButton != null)
+        {
+            for (GuiTextField textbox : this.textboxes)
+            {
+                if (textbox != this.textboxes.get(5))
+                {
+                    try
+                    {
                         textbox.setText("" + Float.valueOf(textbox.getText()));
-                    } catch (Throwable th) {
+                    }
+                    catch (Throwable th)
+                    {
                         textbox.setText("0.0");
                     }
                 }
             }
         }
         EntityConfigurationEntry newEce1 = new EntityConfigurationEntry(current.Clazz, Float.valueOf(this.textboxes.get(0).getText()).floatValue(), Float.valueOf(this.textboxes.get(1).getText()).floatValue(), Float.valueOf(this.textboxes.get(2).getText()).floatValue(), Float.valueOf(this.textboxes.get(3).getText()).floatValue(), Float.valueOf(this.textboxes.get(4).getText()).floatValue(), ((GuiCheckBox) this.buttonList.get(1)).isChecked(), this.textboxes.get(5).getText(), ((GuiCheckBox) this.buttonList.get(0)).isChecked(), current.maxHP, current.eyeHeight, ((GuiCheckBox) this.buttonList.get(3)).isChecked());
-        if (!current.equals(newEce1)) {
+        if (!current.equals(newEce1))
+        {
             Tools.getInstance().getEntityMap().put(newEce1.Clazz, newEce1);
             EntityConfigurationEntry.saveEntityConfig(newEce1);
             GuiEntityList.entities = new ArrayList(Tools.getInstance().getEntityMap().values());
@@ -337,11 +410,13 @@ public class AdvancedGui extends GuiScreen {
         super.actionPerformed(par1GuiButton);
     }
 
-    public FontRenderer getFontRenderer() {
+    public FontRenderer getFontRenderer()
+    {
         return this.fontRenderer;
     }
 
-    public void listClickedCallback(int index) {
+    public void listClickedCallback(int index)
+    {
         String Name;
         this.buttonList.clear();
         this.textboxes = new ArrayList();
@@ -355,15 +430,19 @@ public class AdvancedGui extends GuiScreen {
         this.buttonList.add(3, new GuiCheckBox(0, (220 - (this.fontRenderer.getStringWidth("Disable Mob") + 12)) + 100, 14, this.fontRenderer.getStringWidth("Disable Mob") + 12, 12, "Disable Mob"));
         ((GuiCheckBox) this.buttonList.get(3)).setChecked(this.guiEntityList.visibleEntities.get(index).DisableMob);
         addTextBoxes(index);
-        if (this.guiEntityList.visibleEntities.get(index).NameOverride != null) {
+        if (this.guiEntityList.visibleEntities.get(index).NameOverride != null)
+        {
             Name = this.guiEntityList.visibleEntities.get(index).NameOverride;
-        } else {
+        }
+        else
+        {
             Name = "";
         }
         this.textboxes.get(5).setText(Name);
     }
 
-    public void addTextBoxes(int listIndex) {
+    public void addTextBoxes(int listIndex)
+    {
         this.textboxes.add(0, new GuiTextField(0, this.fontRenderer, 225, 30, 120, 10));
         this.textboxes.get(0).setText(String.valueOf(this.guiEntityList.visibleEntities.get(listIndex).ScaleFactor));
         this.textboxes.add(1, new GuiTextField(1, this.fontRenderer, 225, 46, 120, 10));
