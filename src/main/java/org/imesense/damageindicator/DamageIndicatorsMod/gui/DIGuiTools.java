@@ -591,30 +591,31 @@ public class DIGuiTools extends GuiIngame
 
     public static void renderEntity(EntityLivingBase el)
     {
-        GL11.glDisable(3042);
-        GL11.glEnable(2929);
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+
         try
         {
             float backup = RenderLiving.NAME_TAG_RANGE;
             RenderLiving.NAME_TAG_RANGE = 0.0f;
-            Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(el);
+
+            Render render = Minecraft.getMinecraft()
+                .getRenderManager()
+                .getEntityRenderObject(el);
+
             if (render != null)
             {
-                render.doRender(el, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f);
+                render.doRender(el, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
             }
+
             RenderLiving.NAME_TAG_RANGE = backup;
         }
-        catch (Throwable th)
+        catch (Throwable ignored)
         {
         }
-        GL11.glEnable(3042);
-        GL11.glClear(256);
-        GL11.glDisable(2929);
-        GL11.glColor4f(255.0f, 255.0f, 255.0f, 255.0f);
-        GL11.glBlendFunc(770, 771);
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
     }
 
     public DIGuiTools(Minecraft par1Minecraft)
